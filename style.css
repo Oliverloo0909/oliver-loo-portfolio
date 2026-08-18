@@ -311,6 +311,23 @@ html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mo
 .bullets li{margin:8px 0}
 .bullets li::marker{color:var(--accent)}
 
+/* Nudge that points at the bubble. */
+.nudge{position:fixed;z-index:59;right:112px;bottom:34px;max-width:230px;
+  background:var(--bg-2);border:1px solid var(--line);border-radius:14px;
+  padding:13px 34px 13px 15px;box-shadow:0 14px 40px rgba(0,0,0,.5);
+  animation:nudgein .5s var(--ease)}
+.nudge[hidden]{display:none}
+.nudge b{display:block;font-size:14px;margin-bottom:2px}
+.nudge span{display:block;font-size:12.5px;color:var(--dim);line-height:1.4}
+.nudge::after{content:"";position:absolute;right:-7px;bottom:22px;width:13px;height:13px;
+  background:var(--bg-2);border-right:1px solid var(--line);border-top:1px solid var(--line);
+  transform:rotate(45deg)}
+.nudge-x{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--faint);
+  font-size:17px;line-height:1;cursor:pointer;padding:2px 4px}
+.nudge-x:hover{color:var(--accent)}
+@keyframes nudgein{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+@media (max-width:620px){ .nudge{right:88px;bottom:22px;max-width:190px} }
+
 /* ═══════ HIRE ═══════ */
 
 .hire-row{display:grid;grid-template-columns:clamp(200px,22vw,264px) minmax(0,1fr);
@@ -321,9 +338,12 @@ html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mo
   transition:transform .3s var(--ease)}
 .hire-face img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;
   border:2px solid var(--line);box-shadow:0 18px 50px rgba(0,0,0,.5);
-  transition:border-color .3s var(--ease)}
-.hire-face:hover{transform:translateY(-5px)}
+  transition:border-color .3s var(--ease),opacity .3s var(--ease)}
 .hire-face:hover img{border-color:var(--accent)}
+/* While the floating bubble is docked here it *is* the portrait, so the
+   slot just holds the space and its own image steps aside. */
+.hire-face.occupied img{opacity:0}
+.hire-face.occupied{pointer-events:none}
 .hire-face-cta{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);
   white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
   text-transform:uppercase;color:var(--bg);background:var(--accent);
@@ -361,15 +381,17 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
 
 /* ═══════ avatar + chat ═══════ */
 
-.avatar{position:fixed;right:24px;bottom:24px;z-index:60;
+.avatar{position:fixed;left:0;top:0;z-index:60;
+  transform:translate(var(--av-x,0px),var(--av-y,0px)) scale(var(--av-s,1));
+  transform-origin:0 0;touch-action:none;
   width:74px;height:74px;border-radius:50%;padding:0;cursor:pointer;
   border:2px solid var(--accent);background:var(--bg-2);
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 10px 34px rgba(0,0,0,.45);
   transition:transform .25s var(--ease),border-color var(--swap) var(--ease),
              background-color var(--swap) var(--ease)}
-.avatar:hover{transform:translateY(-4px) scale(1.05)}
-.avatar:active{transform:scale(.97)}
+
+
 .avatar-shot{position:absolute;inset:0;border-radius:50%;overflow:hidden;display:none}
 /* Two stacked layers: the incoming persona fades up over the outgoing
    one, so changing section never blinks through an empty bubble. */
@@ -389,7 +411,10 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
   opacity:0;transition:opacity .25s var(--ease)}
 .avatar:hover .avatar-label{opacity:1}
 .avatar.open .avatar-ping{display:none}
-.avatar.stood-down{opacity:0;transform:translateY(16px) scale(.85);pointer-events:none}
+.avatar.gliding{transition:transform .72s cubic-bezier(.5,.05,.2,1),
+  border-color var(--swap) var(--ease),background-color var(--swap) var(--ease)}
+.avatar.docked{border-width:2px}
+.avatar.dragging{cursor:grabbing}
 
 .chat{position:fixed;right:24px;bottom:112px;z-index:61;width:min(370px,calc(100vw - 48px));
   max-height:min(62vh,540px);display:flex;flex-direction:column;

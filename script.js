@@ -264,8 +264,8 @@
 
     var greeted = false;
     function open() {
+      killNudge(true);
       chat.hidden = false;
-      avatar.classList.remove('stood-down');
       avatar.classList.add('open');
       avatar.setAttribute('aria-expanded', 'true');
       if (!greeted) {
@@ -277,11 +277,94 @@
     function close() {
       chat.hidden = true;
       avatar.classList.remove('open');
-      if (root.getAttribute('data-section') === 'hire') avatar.classList.add('stood-down');
       avatar.setAttribute('aria-expanded', 'false');
     }
 
-    avatar.addEventListener('click', function () { chat.hidden ? open() : close(); });
+    /* ── placement, docking and dragging ──────────────────────
+       The bubble is positioned entirely by transform from a top-left
+       origin, which lets one element travel and scale into the Hire
+       portrait slot instead of a second element fading in. While it is
+       docked the slot only reserves space; the bubble is the portrait. */
+
+    var GAP = 22;
+    var dragDX = 0, dragDY = 0;          // where the reader parked it
+    var docked = false;
+
+    function baseXY() {
+      var size = avatar.offsetWidth || 74;
+      var x = window.innerWidth  - size - GAP + dragDX;
+      var y = window.innerHeight - size - GAP + dragDY;
+      // Never let it end up off screen after a drag or a resize.
+      x = Math.min(Math.max(x, GAP), window.innerWidth  - size - GAP);
+      y = Math.min(Math.max(y, GAP), window.innerHeight - size - GAP);
+      return { x: x, y: y, size: size };
+    }
+
+    function place() {
+      var b = baseXY(), x = b.x, y = b.y, sc = 1;
+      if (docked && faceBtn) {
+        var r = faceBtn.getBoundingClientRect();
+        if (r.width > 0) { x = r.left; y = r.top; sc = r.width / b.size; }
+      }
+      avatar.style.setProperty('--av-x', x.toFixed(1) + 'px');
+      avatar.style.setProperty('--av-y', y.toFixed(1) + 'px');
+      avatar.style.setProperty('--av-s', sc.toFixed(4));
+    }
+
+    function glide() {
+      avatar.classList.add('gliding');
+      place();
+      window.setTimeout(function () { avatar.classList.remove('gliding'); }, 780);
+    }
+
+    function setDocked(on) {
+      if (docked === on) return;
+      docked = on;
+      avatar.classList.toggle('docked', on);
+      if (faceBtn) faceBtn.classList.toggle('occupied', on);
+      glide();
+    }
+
+    // Docked target moves with the page, so track it while scrolling.
+    window.addEventListener('scroll', function () { if (docked) place(); }, { passive: true });
+    window.addEventListener('resize', place, { passive: true });
+    place();
+
+    var downX = 0, downY = 0, startDX = 0, startDY = 0, moved = false, dragging = false;
+
+    avatar.addEventListener('pointerdown', function (e) {
+      if (docked) return;                       // parked in Hire, leave it be
+      dragging = true; moved = false;
+      downX = e.clientX; downY = e.clientY;
+      startDX = dragDX; startDY = dragDY;
+      avatar.classList.add('dragging');
+      avatar.setPointerCapture(e.pointerId);
+    });
+
+    avatar.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - downX, dy = e.clientY - downY;
+      if (!moved && Math.abs(dx) + Math.abs(dy) > 4) moved = true;
+      if (!moved) return;
+      dragDX = startDX + dx; dragDY = startDY + dy;
+      place();
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      avatar.classList.remove('dragging');
+      if (e && e.pointerId != null && avatar.hasPointerCapture(e.pointerId)) {
+        avatar.releasePointerCapture(e.pointerId);
+      }
+      if (!moved) { chat.hidden ? open() : close(); }   // a tap, not a drag
+    }
+    avatar.addEventListener('pointerup', endDrag);
+    avatar.addEventListener('pointercancel', endDrag);
+
+    // Docked in Hire the bubble stops taking pointer events of its own,
+    // so the slot forwards the click through to the same panel.
+    avatar.addEventListener('click', function (e) { if (docked) { e.preventDefault(); } });
     closeBtn.addEventListener('click', close);
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && !chat.hidden) close();
@@ -297,8 +380,8 @@
       var p = PERSONA[key] || PERSONA.thesis;
       if (roleTag) roleTag.textContent = p.role;
 
-      // The big portrait in Hire replaces the floating bubble there.
-      avatar.classList.toggle('stood-down', key === 'hire' && chat.hidden);
+      // In Hire the bubble flies into the portrait slot and becomes it.
+      setDocked(key === 'hire');
 
       if (p.img === showing) return;
       showing = p.img;
@@ -323,6 +406,30 @@
     if (faceBtn) faceBtn.addEventListener('click', function () {
       if (chat.hidden) open(); else close();
     });
+
+    /* ── nudge ────────────────────────────────────────────────
+       One prompt so the bubble reads as something you can talk to.
+       Dismissed for the session once closed or once the chat is used. */
+    var nudge = document.getElementById('nudge');
+    var nudgeX = document.getElementById('nudgeX');
+
+    function killNudge(remember) {
+      if (!nudge) return;
+      nudge.hidden = true;
+      if (remember) { try { sessionStorage.setItem('ol-nudge', '1'); } catch (err) {} }
+    }
+
+    if (nudge) {
+      var seen = false;
+      try { seen = sessionStorage.getItem('ol-nudge') === '1'; } catch (err) {}
+      if (!seen) window.setTimeout(function () {
+        if (chat.hidden && !docked) nudge.hidden = false;
+      }, 3800);
+      if (nudgeX) nudgeX.addEventListener('click', function () { killNudge(true); });
+      nudge.addEventListener('click', function (e) {
+        if (e.target !== nudgeX) { killNudge(true); open(); }
+      });
+    }
     new MutationObserver(dressUp).observe(root, { attributes: true, attributeFilter: ['data-section'] });
     dressUp();
   }
