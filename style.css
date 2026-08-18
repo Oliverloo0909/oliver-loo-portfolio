@@ -60,9 +60,10 @@ html.js .reveal.in{opacity:1;transform:none}
 /* screen blend drops the footage's black background to nothing, so only
    the bright wireframe composites onto the page. Without it the video's
    letterbox shows as a grey rectangle once brightness is pushed up. */
-.cosmos video{position:absolute;top:50%;left:70%;width:92%;height:128%;
+.cosmos video{position:absolute;top:50%;left:82%;width:84%;height:122%;
   opacity:var(--globe-op,1);
-  transform:translate(-50%,-50%);object-fit:contain;mix-blend-mode:screen;
+  transform:translate(calc(-50% + var(--par-x,0px)),calc(-50% + var(--par-y,0px)));
+  object-fit:contain;mix-blend-mode:screen;
   /* Feathers the video's rectangle away so its edge can never read as a
      seam, and lets the globe fall off into space the way it should. */
   -webkit-mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 52%,transparent 86%);
@@ -97,7 +98,8 @@ html.js .reveal.in{opacity:1;transform:none}
 
 .haze{position:absolute;inset:0;
   background:
-    linear-gradient(101deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.74) 30%,rgba(0,0,0,.2) 54%,transparent 70%)}
+    linear-gradient(100deg,rgba(0,0,0,.97) 0%,rgba(0,0,0,.93) 40%,rgba(0,0,0,.6) 58%,rgba(0,0,0,.14) 74%,transparent 86%),
+    radial-gradient(ellipse 48% 64% at 24% 50%,rgba(0,0,0,.78),transparent 72%)}
 
 /* ── matrix rain ── */
 #rain{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;transition:opacity 900ms var(--ease)}
@@ -124,14 +126,10 @@ html[data-section="break"] .sec-break::before{opacity:1}
 /* ── sections & type ── */
 .section{padding:clamp(84px,13vw,132px) 0;position:relative}
 .sec-thesis{min-height:100vh;display:flex;align-items:center;padding:clamp(90px,15vw,150px) 0}
-.thesis-statement{
-  background:linear-gradient(96deg,#ffffff 6%,#c6ccd6 26%,#ffffff 42%,#9aa2af 58%,#f2f5f9 76%,#cfd6e0 100%);
-  background-size:280% 100%;
-  -webkit-background-clip:text;background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:pour 11s var(--ease) infinite}
-@keyframes pour{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-.thesis-statement .w{-webkit-text-fill-color:currentColor}
+/* Solid white rather than a clipped gradient. background-clip:text
+   cannot survive the per-word masks used for the entrance, and a flat
+   colour is the stronger read against the globe anyway. */
+.thesis-statement{color:#fbfbfd}
 
 .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.17em;text-transform:uppercase;
   color:var(--accent);margin:0 0 22px;transition:color var(--swap) var(--ease)}
@@ -140,15 +138,15 @@ h2{font-size:clamp(32px,5.4vw,50px);margin:0 0 18px}
 h3{font-size:21px;margin:0}
 html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mono);letter-spacing:0;font-weight:600}
 
-.thesis-statement{font-size:clamp(44px,8vw,88px);line-height:1.02;margin:0 0 20px;
-  letter-spacing:-.035em}
+.thesis-statement{font-size:clamp(42px,6.8vw,76px);line-height:1.03;margin:0 0 22px;
+  letter-spacing:-.032em;font-weight:650}
 .thesis-statement .w{border-bottom:3px solid var(--accent-2);padding-bottom:1px}
 .w-break{color:#00ff70;border-bottom-color:#00b74f!important}
 .w-build{color:#ff9b4a;border-bottom-color:#cc7530!important}
 .w-feel{color:#e0745a;border-bottom-color:#c02a1c!important}
 
-.lede{max-width:36em;margin:0 0 36px}
-.lede p{font-size:clamp(17px,2.2vw,19.5px);line-height:1.62;color:var(--dim);margin:0 0 16px;
+.lede{max-width:29em;margin:0 0 38px}
+.lede p{font-size:clamp(16px,1.85vw,18px);line-height:1.66;color:var(--dim);margin:0 0 15px;
   transition:color var(--swap) var(--ease)}
 .lede .punch{color:var(--text);font-weight:500}
 .section-lede{color:var(--dim);max-width:42em;margin:0 0 52px;font-size:18px;transition:color var(--swap) var(--ease)}
@@ -156,6 +154,36 @@ html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mo
 .scroll-hint{font-family:var(--mono);font-size:12px;letter-spacing:.07em;color:var(--faint);margin:46px 0 0}
 .scroll-hint .arrow{display:inline-block;animation:bob 1.9s var(--ease) infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ── hero entrance ──────────────────────────────────────────
+   The hero sits above the fold, so its reveal fires instantly and the
+   stagger is what makes it feel composed rather than dumped. Each line
+   rises out from behind a mask rather than just fading up. */
+
+/* fill-mode must be a single keyword: "backwards forwards" is invalid,
+   so the whole shorthand silently dropped its fill and the hero settled
+   back to opacity 0 once the animation ended. "both" is the fix. */
+html.js .sec-thesis .reveal{opacity:0;transform:none;transition:none;
+  animation:heroIn .95s cubic-bezier(.16,.84,.3,1) both}
+@keyframes heroIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+html.js .sec-thesis .eyebrow{animation-delay:.10s}
+html.js .sec-thesis .thesis-statement{animation-delay:.20s}
+html.js .sec-thesis .thesis-sub{animation-delay:.42s}
+html.js .sec-thesis .lede{animation-delay:.58s}
+html.js .sec-thesis .links{animation-delay:.72s}
+html.js .sec-thesis .scroll-hint{animation-delay:.88s}
+
+/* Headline words lift out from under a clipping edge. */
+.hw{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.08em}
+.hw i{display:inline-block;font-style:inherit;transform:translateY(110%);
+  animation:hwUp 1s cubic-bezier(.16,.84,.3,1) forwards}
+@keyframes hwUp{to{transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  html.js .sec-thesis .reveal{opacity:1;animation:none}
+  .hw i{transform:none;animation:none}
+}
 
 .links{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:12px 28px}
 .links a{font-family:var(--mono);font-size:14px;color:var(--text);border-bottom:1px solid var(--line);padding-bottom:2px}
@@ -375,8 +403,8 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
 
 /* ═══════ hero sub ═══════ */
 
-.thesis-sub{font-size:clamp(18px,2.6vw,25px);font-weight:500;letter-spacing:-.018em;
-  line-height:1.42;margin:0 0 30px;max-width:22em;color:var(--text)}
+.thesis-sub{font-size:clamp(17.5px,2.3vw,23px);font-weight:450;letter-spacing:-.016em;
+  line-height:1.45;margin:0 0 34px;max-width:19em;color:var(--text)}
 
 
 /* ═══════ avatar + chat ═══════ */

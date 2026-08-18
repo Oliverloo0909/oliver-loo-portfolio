@@ -64,6 +64,60 @@
   applyTheme();
   horizon();
 
+  /* ── 1b. hero flourishes ─────────────────────────────────────
+     Splits the headline into words so each can rise from behind its own
+     clipping edge, and drifts the globe a little against the pointer.
+     Both are decoration: if either is skipped the hero still reads. */
+
+  var heroH1 = document.querySelector('.sec-thesis .thesis-statement');
+
+  if (heroH1 && !reduced) {
+    var words = heroH1.textContent.trim().split(/\s+/);
+    heroH1.textContent = '';
+    words.forEach(function (w, i) {
+      var box = document.createElement('span');
+      box.className = 'hw';
+      var inner = document.createElement('i');
+      inner.textContent = w;
+      // The headline is the second thing in, so start after the eyebrow.
+      inner.style.animationDelay = (0.24 + i * 0.075).toFixed(3) + 's';
+      box.appendChild(inner);
+      heroH1.appendChild(box);
+      if (i < words.length - 1) heroH1.appendChild(document.createTextNode(' '));
+    });
+  }
+
+  var hero = document.getElementById('thesis');
+
+  if (hero && !reduced && window.matchMedia('(pointer:fine)').matches) {
+    var px = 0, py = 0, qx = 0, qy = 0, parRaf = null;
+
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      // -1..1 from the centre, scaled to a few pixels of drift.
+      px = ((e.clientX - r.left) / r.width - 0.5) * 26;
+      py = ((e.clientY - r.top) / r.height - 0.5) * 18;
+      if (!parRaf) parRaf = window.requestAnimationFrame(drift2);
+    }, { passive: true });
+
+    hero.addEventListener('pointerleave', function () {
+      px = 0; py = 0;
+      if (!parRaf) parRaf = window.requestAnimationFrame(drift2);
+    });
+
+    function drift2() {
+      qx += (px - qx) * 0.06;
+      qy += (py - qy) * 0.06;
+      root.style.setProperty('--par-x', qx.toFixed(2) + 'px');
+      root.style.setProperty('--par-y', qy.toFixed(2) + 'px');
+      if (Math.abs(px - qx) > 0.1 || Math.abs(py - qy) > 0.1) {
+        parRaf = window.requestAnimationFrame(drift2);
+      } else {
+        parRaf = null;
+      }
+    }
+  }
+
   /* ── 2. reveal on scroll ─────────────────────────────────── */
 
   var reveals = [].slice.call(document.querySelectorAll('.reveal'));
