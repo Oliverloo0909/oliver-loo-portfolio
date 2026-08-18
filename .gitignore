@@ -1,0 +1,10 @@
+# Personal documents must never reach a public repo or a deployed URL.
+# The transcripts and status letter carry NRIC and date of birth.
+*.pdf
+!Oliver-Loo-CV.pdf
+
+# Private working notes, not for publishing
+JOB-SEARCH.md
+LINKEDIN.md
+
+.DS_Store

@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en" data-section="thesis">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oliver Loo — Break, Build, Feel</title>
+<meta name="description" content="I break things, I build things, and I care how they feel. Computer Science at NUS, security specialisation, products live on the App Store.">
+<meta property="og:title" content="Oliver Loo — Break, Build, Feel">
+<meta property="og:description" content="Security engineer and product builder. Levanta is on the App Store, funhop is live, and I am looking for my next role.">
+<meta property="og:type" content="website">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>◐</text></svg>">
+</head>
+<body>
+
+<a class="skip" href="#thesis">Skip to content</a>
+<canvas id="rain" aria-hidden="true"></canvas>
+
+<nav class="rail" aria-label="Sections">
+  <ul>
+    <li><a href="#thesis" data-dot="thesis"><em>Start</em><span></span></a></li>
+    <li><a href="#break"  data-dot="break"><em>Break</em><span></span></a></li>
+    <li><a href="#build"  data-dot="build"><em>Build</em><span></span></a></li>
+    <li><a href="#feel"   data-dot="feel"><em>Feel</em><span></span></a></li>
+    <li><a href="#path"   data-dot="path"><em>Path</em><span></span></a></li>
+    <li><a href="#hire"   data-dot="hire"><em>Hire</em><span></span></a></li>
+  </ul>
+</nav>
+
+<!-- ══════════ THESIS ══════════ -->
+<header class="section sec-thesis" id="thesis" data-theme="thesis">
+  <div class="wrap">
+    <p class="eyebrow reveal">Oliver Loo · Singapore · open to remote</p>
+
+    <h1 class="thesis-statement reveal">
+      I <a href="#break" class="w w-break">break</a> things.<br>
+      I <a href="#build" class="w w-build">build</a> things.<br>
+      And I care how they <a href="#feel" class="w w-feel">feel</a>.
+    </h1>
+
+    <div class="lede reveal">
+      <p>
+        Same habit, three ways. CS at NUS, security track, because learning how
+        things fail teaches you how they're made.
+      </p>
+      <p>
+        Levanta's on the App Store. funhop is live in Singapore tonight. Two games
+        in the oven.
+      </p>
+      <p class="punch">Graduating August 2026. Looking for what's next.</p>
+    </div>
+
+    <ul class="links reveal" role="list">
+      <li><a href="mailto:oliverloo09@gmail.com">oliverloo09@gmail.com</a></li>
+      <li><a href="https://www.linkedin.com/in/oliver-loo-8ab131157">LinkedIn</a></li>
+      <li><a href="https://github.com/YOUR-GITHUB-HANDLE">GitHub</a></li>
+      <li><a href="#hire">Résumé</a></li>
+    </ul>
+
+    <p class="scroll-hint" aria-hidden="true">
+      <span class="arrow">↓</span> keep scrolling
+    </p>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════ BREAK ══════════ -->
+<section class="section sec-break" id="break" data-theme="break">
+  <div class="wrap">
+    <p class="eyebrow reveal">01 / Break</p>
+    <h2 class="reveal">Security</h2>
+    <p class="section-lede reveal">
+      I'd rather be the one who finds the hole than the one who reads about it
+      in the incident report.
+    </p>
+
+    <div class="term reveal" aria-hidden="true">
+      <div class="term-bar"><i></i><i></i><i></i><b>oliver@break ~ %</b></div>
+      <pre class="term-body"><span class="p">$</span> whoami
+<span class="o">security engineer who also ships product</span>
+<span class="p">$</span> cat approach.txt
+<span class="o">enumerate everything. assume nothing.
+the bug is almost never where the docs say it is.</span>
+<span class="p">$</span> ls ~/labs
+<span class="o">proving-grounds/  hacksmarter/  hack-the-box/
+malware-analysis/  pcap-nids-agent/</span>
+<span class="p">$</span> <span class="cur">▊</span></pre>
+    </div>
+
+    <div class="grid">
+      <div class="col reveal">
+        <h3>I run the labs</h3>
+        <p>
+          <b>Proving Grounds</b>, <b>HackSmarter</b>, <b>Hack The Box</b>.
+          Enumeration, exploitation, privesc, Linux and Windows. Favourite part
+          of the week.
+        </p>
+        <p class="note">
+          No OSCP. The lab work is real, the cert isn't mine to claim.
+        </p>
+      </div>
+
+      <div class="col reveal">
+        <h3>I take malware apart</h3>
+        <p>
+          Worked the <i>Practical Malware Analysis</i> labs end to end. Static
+          triage, dynamic behaviour in a sandbox, disassembler when the binary
+          got shy.
+        </p>
+      </div>
+
+      <div class="col reveal">
+        <h3>I built a detector</h3>
+        <p>
+          A PCAP agent with its own MCP server. It feeds suspicious flows to an
+          LLM analyst loop instead of a ruleset, so it catches traffic a signature
+          walks straight past.
+        </p>
+      </div>
+
+      <div class="col reveal">
+        <h3>I've done it for real</h3>
+        <p>
+          Six months at <b>HTX</b> on AI and cybersecurity. Then an attachment at
+          <b>DART</b>. Both in <a href="#path">Path</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ BUILD ══════════ -->
+<section class="section sec-build" id="build" data-theme="build">
+  <div class="wrap">
+    <p class="eyebrow reveal">02 / Build</p>
+    <h2 class="reveal">Things I shipped</h2>
+    <p class="section-lede reveal">
+      Nobody asked for any of these. I built them anyway, then put them in front
+      of people. That's where you find out what you got wrong.
+    </p>
+
+    <!-- Levanta -->
+    <article class="show reveal">
+      <div class="show-art art-levanta">
+        <img class="phone phone-a" src="assets/shots/levanta-coach.png"
+             alt="Levanta's AI coach chat, asking for a workout in plain language" loading="lazy">
+        <img class="phone phone-b" src="assets/shots/levanta-onboard.png"
+             alt="Levanta onboarding, asking how many days a week you can train" loading="lazy">
+        <div class="ripple" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+      <div class="show-text">
+        <div class="show-head">
+          <img class="appicon" src="assets/levanta-icon.png" alt="" loading="lazy">
+          <div>
+            <h3>Levanta</h3>
+            <span class="tag tag-live">Live on the App Store</span>
+          </div>
+        </div>
+        <p class="role">Solo. Product, design, mobile, backend.</p>
+        <p>
+          An AI personal trainer. Type <i>"bench 3×8 80kg, rows 4×10"</i> and it
+          becomes structured sets. Or just talk to the coach and get a full program.
+        </p>
+        <p>
+          The bit I'm proud of: <b>the model never touches your data on its own.</b>
+          Every action shows up as a widget you confirm first.
+        </p>
+        <ul class="stack" role="list">
+          <li>React Native</li><li>Expo</li><li>TypeScript</li>
+          <li>WatermelonDB</li><li>Gemini</li><li>Local first</li>
+        </ul>
+        <p class="card-links">
+          <a href="https://apps.apple.com/us/app/levanta/id6762108078">Get it on the App Store</a>
+        </p>
+      </div>
+    </article>
+
+    <!-- funhop -->
+    <article class="show show-flip reveal">
+      <div class="show-art art-funhop">
+        <div class="browser">
+          <div class="browser-bar"><i></i><i></i><i></i><b>funhop.app</b></div>
+          <img src="assets/shots/funhop.png" alt="funhop showing tonight's events in Singapore" loading="lazy">
+        </div>
+      </div>
+      <div class="show-text">
+        <div class="show-head">
+          <div>
+            <h3>funhop</h3>
+            <span class="tag tag-live">Live</span>
+          </div>
+        </div>
+        <p class="role">Solo. Full stack and the whole data pipeline.</p>
+        <p>
+          Tell it your vibe. Area, budget, group size, mood. Get back a two or three
+          stop night out, built from things actually happening tonight.
+        </p>
+        <p>
+          Getting the data is the hard part. Seven stages of Python scrape Telegram
+          and event sites, an LLM turns messy posts into structured events. Two
+          adapters once corrupted <b>85% of the table</b> in total silence. Took me
+          a while to find it. Signed image URLs losing their query strings, and a
+          detail URL I'd been faking from a title slug that had 404'd for seven
+          weeks.
+        </p>
+        <ul class="stack" role="list">
+          <li>Next.js 16</li><li>TypeScript</li><li>Tailwind</li>
+          <li>Python</li><li>LLM extraction</li><li>Supabase</li>
+        </ul>
+        <p class="card-links"><a href="https://funhop.app">Go to funhop.app</a></p>
+      </div>
+    </article>
+
+    <!-- Langfun -->
+    <article class="show reveal">
+      <div class="show-art art-game">
+        <div class="belt" aria-hidden="true">
+          <div class="belt-track">
+            <span class="plate"><img src="assets/sprites/croissant.png" alt=""><b>bonjour</b></span>
+            <span class="plate"><img src="assets/sprites/baguette.png" alt=""><b>s'il vous plaît</b></span>
+            <span class="plate"><img src="assets/sprites/eclair.png" alt=""><b>merci</b></span>
+            <span class="plate"><img src="assets/sprites/coffee.png" alt=""><b>l'addition</b></span>
+            <span class="plate"><img src="assets/sprites/cheese.png" alt=""><b>combien</b></span>
+            <span class="plate"><img src="assets/sprites/wine.png" alt=""><b>excusez-moi</b></span>
+            <span class="plate"><img src="assets/sprites/croissant.png" alt=""><b>bonjour</b></span>
+            <span class="plate"><img src="assets/sprites/baguette.png" alt=""><b>s'il vous plaît</b></span>
+            <span class="plate"><img src="assets/sprites/eclair.png" alt=""><b>merci</b></span>
+            <span class="plate"><img src="assets/sprites/coffee.png" alt=""><b>l'addition</b></span>
+            <span class="plate"><img src="assets/sprites/cheese.png" alt=""><b>combien</b></span>
+            <span class="plate"><img src="assets/sprites/wine.png" alt=""><b>excusez-moi</b></span>
+          </div>
+          <div class="belt-rail"></div>
+          <div class="hud">
+            <img src="assets/sprites/heart.png" alt=""><img src="assets/sprites/heart.png" alt=""><img src="assets/sprites/heart.png" alt="">
+            <span class="combo">×3 COMBO</span>
+            <img src="assets/sprites/coin.png" alt=""><span class="coins">240</span>
+          </div>
+        </div>
+      </div>
+      <div class="show-text">
+        <div class="show-head">
+          <img class="appicon" src="assets/ouichef-icon.png" alt="" loading="lazy">
+          <div>
+            <h3>Oui Chef! and Sushi Senpai</h3>
+            <span class="tag">Langfun · in development</span>
+          </div>
+        </div>
+        <p class="role">Solo studio. Engine, game, content, art direction.</p>
+        <p>
+          Run a Paris boulangerie or a Tokyo sushi bar. A customer asks in English,
+          you tap the right phrase before it slides off the belt. No tutorial,
+          doesn't need one.
+        </p>
+        <p>
+          Both run on <b>one engine</b>. Game three is just new phrases, new sprites,
+          new voice. Under the arcade layer it's spaced repetition, and the wrong
+          answers are picked to look plausible so you can't win by matching shapes.
+        </p>
+        <ul class="stack" role="list">
+          <li>Expo</li><li>Skia</li><li>Reanimated</li>
+          <li>Zustand</li><li>Supabase</li><li>Spaced repetition</li>
+        </ul>
+        <p class="card-links"><a href="PLAY-URL-HERE">Play it in the browser</a></p>
+      </div>
+    </article>
+
+    <!-- Bao Bae strip -->
+    <article class="strip reveal">
+      <h3>Bao Bae</h3>
+      <p>
+        AI couples therapy running Emotionally Focused Therapy sessions. FAISS
+        vector search over real clinical material, so it isn't making the advice up.
+      </p>
+      <ul class="stack" role="list"><li>Python</li><li>RAG</li><li>FAISS</li><li>Vector search</li></ul>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════ FEEL ══════════ -->
+<section class="section sec-feel" id="feel" data-theme="feel">
+  <svg class="spray-defs" aria-hidden="true" width="0" height="0">
+    <filter id="spray">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="3"/>
+    </filter>
+    
+  </svg>
+
+  <div class="wrap feel-wrap">
+
+    <div class="stencil-block">
+      <p class="eyebrow">03 / Feel</p>
+      <h2 class="stencil">DESIGN<br><span class="stencil-out">ISN'T</span><br>DECORATION</h2>
+      <p class="feel-kicker">
+        If nobody wants to open it, nothing else you built matters.
+      </p>
+    </div>
+
+    <!-- authored stencil art: spray can + rat, Banksy register -->
+    <div class="art-slot">
+      <svg viewBox="0 0 300 340" class="stencil-art" role="img" aria-label="Stencil drawing of a spray can mid spray">
+        <g filter="url(#spray)">
+          <ellipse cx="146" cy="306" rx="72" ry="8" fill="#14110e" opacity=".2"/>
+          <g transform="rotate(-13 150 210)">
+            <rect x="112" y="150" width="76" height="146" rx="13" fill="#14110e"/>
+            <path d="M126 150c0-14 6-22 12-27h24c6 5 12 13 12 27z" fill="#14110e"/>
+            <rect x="138" y="112" width="24" height="16" rx="4" fill="#14110e"/>
+            <rect x="132" y="102" width="36" height="11" rx="5" fill="#14110e"/>
+            <rect x="112" y="196" width="76" height="46" fill="#c02a1c"/>
+            <rect x="124" y="210" width="52" height="6" rx="3" fill="#f2ede3" opacity=".9"/>
+            <rect x="124" y="224" width="34" height="6" rx="3" fill="#f2ede3" opacity=".9"/>
+          </g>
+          <rect x="118" y="300" width="7" height="26" rx="3.5" fill="#14110e" opacity=".55"/>
+          <rect x="150" y="300" width="6" height="17" rx="3" fill="#14110e" opacity=".4"/>
+        </g>
+        <g filter="url(#spray)" class="burst">
+          <circle cx="196" cy="96" r="5" fill="#c02a1c"/><circle cx="214" cy="78" r="8" fill="#c02a1c"/>
+          <circle cx="236" cy="60" r="11" fill="#c02a1c"/><circle cx="258" cy="42" r="6" fill="#c02a1c"/>
+          <circle cx="206" cy="108" r="3" fill="#c02a1c"/><circle cx="232" cy="88" r="4" fill="#c02a1c"/>
+          <circle cx="252" cy="70" r="5" fill="#c02a1c"/><circle cx="272" cy="56" r="3" fill="#c02a1c"/>
+          <circle cx="224" cy="46" r="4" fill="#c02a1c"/><circle cx="246" cy="96" r="3" fill="#c02a1c"/>
+          <circle cx="268" cy="86" r="4" fill="#c02a1c"/><circle cx="190" cy="80" r="3" fill="#c02a1c"/>
+        </g>
+      </svg>
+      <p class="art-cap">Drawn in SVG. No image files.</p>
+    </div>
+
+    <div class="tile tile-1">
+      <span class="tile-n">01</span>
+      <h3>Plain, then colour</h3>
+      <p>
+        funhop starts black and white. Colour only shows up when you touch it.
+      </p>
+    </div>
+
+    <div class="tile tile-2">
+      <span class="tile-n">02</span>
+      <h3>A motif beats a logo</h3>
+      <p>
+        Levanta's whole brand is a ripple. Same rings in the splash, the loading
+        states, the empty screens.
+      </p>
+    </div>
+
+    <div class="tile tile-3">
+      <span class="tile-n">03</span>
+      <h3>Juice over features</h3>
+      <p>
+        Squash and stretch. Screen shake on a miss. Confetti on a perfect shift.
+        Pixels that never blur.
+      </p>
+    </div>
+
+    <figure class="taped">
+      <img src="assets/shots/flaneuse.png" alt="Flâneuse fitting room, a look on a model with a live look total panel" loading="lazy">
+      <span class="tape tape-l" aria-hidden="true"></span>
+      <span class="tape tape-r" aria-hidden="true"></span>
+      <figcaption>
+        <b>Flâneuse.</b> A fashion concept built around a fitting room. Scroll the
+        looks, watch them land on the model, then try them on yourself.
+      </figcaption>
+    </figure>
+
+    <div class="credential">
+      <p class="cred-small">Not just taste</p>
+      <p class="cred-big">CS 148 · Computer Graphics · Stanford · <b>A+</b></p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════ PATH ══════════ -->
+<section class="section sec-path" id="path" data-theme="path">
+  <div class="wrap">
+    <p class="eyebrow reveal">04 / Path</p>
+    <h2 class="reveal">Where I've been</h2>
+
+    <div class="entry reveal">
+      <div class="entry-when">2026</div>
+      <div class="entry-what">
+        <h3>DART Consulting and Training</h3>
+        <p class="sub">Technology attachment · NUS Advanced Technology Attachment Programme, 12 credits</p>
+        <p>
+          Six months in cybersecurity training and consulting. Taught me the side a
+          syllabus skips: how security actually lands in a room full of people who
+          don't do security.
+        </p>
+        <p>
+          Also taught me to <b>explain it to people who aren't engineers</b>.
+          Teaching something is the fastest way to find the holes in your own
+          understanding.
+        </p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <div class="entry-when">Jan – Jun 2025</div>
+      <div class="entry-what">
+        <h3>HTX, Home Team Science and Technology Agency</h3>
+        <p class="sub">AI and Cybersecurity Intern · six months</p>
+        <ul class="bullets" role="list">
+          <li>Built automated data collection and workflow orchestration systems for social media platforms.</li>
+          <li>Deployed and ran lightweight LLMs in virtualised Linux environments and wired them into collection and online interaction pipelines.</li>
+          <li>Worked with vision language models, captcha solvers and decision making algorithms.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <div class="entry-when">Mar – Jun 2024</div>
+      <div class="entry-what">
+        <h3>Gem Comm</h3>
+        <p class="sub">AI and Digital Marketing Intern</p>
+        <ul class="bullets" role="list">
+          <li>Designed automated workflows on the OpenAI API to speed up social content generation.</li>
+          <li>Researched and pitched AI for finance, including sentiment analysis of financial news and predictive models for stock movement.</li>
+          <li>Wrote EDMs, built decks and ran the social calendar across LinkedIn, Instagram and Facebook.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <div class="entry-when">2019 – 2020</div>
+      <div class="entry-what">
+        <h3>Singapore Armed Forces, 10C4I</h3>
+        <p class="sub">Platoon Sergeant, Second Sergeant</p>
+        <p>
+          Led a team keeping a critical army network alive. Configuring devices,
+          troubleshooting under pressure, training every new operator. First time I
+          had to explain something technical to someone who had to get it right.
+        </p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <div class="entry-when">2021 – 2026</div>
+      <div class="entry-what">
+        <h3>National University of Singapore</h3>
+        <p class="sub">Bachelor of Computing (Honours) in Computer Science · conferred 31 August 2026</p>
+        <p>Second Class Upper Honours, Distinction. Security specialisation.</p>
+      </div>
+    </div>
+
+    <div class="entry reveal">
+      <div class="entry-when">Summer 2025</div>
+      <div class="entry-what">
+        <h3>Stanford University</h3>
+        <p class="sub">Undergraduate Summer Visitor · 8 credits transferred · GPA 4.00</p>
+        <p>
+          Computer Graphics and Imaging, and Technology Entrepreneurship. How
+          pixels get made, and how to think about the thing you're making as a
+          business.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ HIRE ══════════ -->
+<section class="section sec-hire" id="hire" data-theme="hire">
+  <div class="wrap narrow">
+    <p class="eyebrow reveal">05 / Hire</p>
+    <h2 class="reveal">Let's build something</h2>
+    <p class="section-lede reveal">
+      Security or product engineering, Singapore or remote, from September 2026.
+      Best when I get to do both. Got something you want broken or built?
+    </p>
+
+    <a class="cv-box reveal" href="Oliver-Loo-CV.pdf" download>
+      <span class="cv-icon" aria-hidden="true">↓</span>
+      <span class="cv-text">
+        <b>Download my résumé</b>
+        <em>PDF · one page · updated August 2026</em>
+      </span>
+      <span class="cv-go" aria-hidden="true">→</span>
+    </a>
+
+    <p class="big-link reveal"><a href="mailto:oliverloo09@gmail.com">oliverloo09@gmail.com</a></p>
+    <ul class="links reveal" role="list">
+      <li><a href="tel:+6582981369">+65 8298 1369</a></li>
+      <li><a href="https://www.linkedin.com/in/oliver-loo-8ab131157">LinkedIn</a></li>
+      <li><a href="https://github.com/YOUR-GITHUB-HANDLE">GitHub</a></li>
+      <li><a href="https://apps.apple.com/us/app/levanta/id6762108078">App Store</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap"><p>Oliver Loo · Singapore · written by hand in HTML and CSS, no framework</p></div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
