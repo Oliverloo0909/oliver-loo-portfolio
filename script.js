@@ -209,24 +209,29 @@
   var afloat = document.querySelector('.afloat');
 
   if (afloat && !reduced && hasIO) {
+    // The headline is optional here. When there is one, split it into
+    // letters so they can rain in; without it the class toggle below
+    // still drives the body copy surfacing.
     var title = afloat.querySelector('.afloat-title');
-    var words = title.textContent.split(' ');
-    title.textContent = '';
 
-    words.forEach(function (word, wi) {
-      if (wi) title.appendChild(document.createTextNode(' '));
-      for (var i = 0; i < word.length; i++) {
-        var sp = document.createElement('span');
-        sp.textContent = word[i];
-        title.appendChild(sp);
-      }
-    });
+    if (title) {
+      var words = title.textContent.split(' ');
+      title.textContent = '';
 
-    var drops = [].slice.call(title.querySelectorAll('span'));
-    drops.forEach(function (sp, i) {
-      // Slightly uneven delays so it reads as rain, not a wave.
-      sp.style.animationDelay = (i * 0.055 + (i % 3) * 0.02).toFixed(3) + 's';
-    });
+      words.forEach(function (word, wi) {
+        if (wi) title.appendChild(document.createTextNode(' '));
+        for (var i = 0; i < word.length; i++) {
+          var sp = document.createElement('span');
+          sp.textContent = word[i];
+          title.appendChild(sp);
+        }
+      });
+
+      [].slice.call(title.querySelectorAll('span')).forEach(function (sp, i) {
+        // Slightly uneven delays so it reads as rain, not a wave.
+        sp.style.animationDelay = (i * 0.055 + (i % 3) * 0.02).toFixed(3) + 's';
+      });
+    }
 
     new IntersectionObserver(function (entries) {
       var e = entries[0];
@@ -395,7 +400,9 @@
       downX = e.clientX; downY = e.clientY;
       startDX = dragDX; startDY = dragDY;
       avatar.classList.add('dragging');
-      avatar.setPointerCapture(e.pointerId);
+      // Capture can throw if the pointer is already gone; losing it just
+      // means the drag ends at the element boundary, which is survivable.
+      try { avatar.setPointerCapture(e.pointerId); } catch (err) {}
     });
 
     avatar.addEventListener('pointermove', function (e) {
