@@ -43,6 +43,37 @@ Three placeholders are left. Search and replace:
 Everything else is real: the Levanta App Store link, your LinkedIn, your phone
 number and email are all wired up.
 
+## The avatar (needs your photos)
+
+The floating avatar changes persona per section and opens a chat panel. Right
+now it shows an "OL" monogram because the image files don't exist yet. Drop
+these into `assets/avatar/` and it picks them up automatically. No code change
+needed, and any file that's missing just falls back to the monogram.
+
+| File | Section | Persona |
+|---|---|---|
+| `thesis.jpg` | hero | professional headshot |
+| `builder.jpg` | Build | builder |
+| `hacker.jpg` | Break | hacker |
+| `artist.jpg` | Feel | artist |
+| `life.jpg` | Path | off the clock, tennis or ski |
+| `hire.jpg` | Hire | approachable, available |
+
+Square crops, roughly 300×300, are ideal.
+
+**About the Seedance morph video.** The avatar is currently six stills swapped by
+section, which is the version that works today. If you produce the morph video
+instead, tell me and I'll swap the `<img>` for a scrubbed `<video>` so the
+persona transition animates between sections rather than cutting.
+
+## The chat answers
+
+All nine questions and answers live in the `ANSWERS` array in
+[script.js](script.js), in the avatar section. Edit the text there and nothing
+else changes. It runs entirely locally with no API key and no network call. When
+you want a real model behind it, replace the `reply()` function and leave the
+rest alone.
+
 ## Regenerating the résumé PDF
 
 Edit `resume.html`, then:
