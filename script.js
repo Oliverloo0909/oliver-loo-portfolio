@@ -75,7 +75,62 @@
     }, 3000);
   }
 
-  /* ── 3. matrix rain ──────────────────────────────────────────
+  /* ── 3. scroll-scrubbed globe ────────────────────────────────
+     The video never plays on its own. Its playhead is tied to how
+     far down the page you are, so the globe turns because you
+     scrolled, and stops when you stop. Eased toward the target
+     rather than snapped, otherwise fast scrolling looks like a
+     slideshow of keyframes. */
+
+  var globe = document.getElementById('globe');
+
+  if (globe && !reduced) {
+    var want = 0, have = 0, ready = false, spin = null;
+
+    // The video is often already loaded by the time this runs, in which
+    // case loadedmetadata has fired and will never fire again. Check the
+    // state directly as well as listening.
+    function boot() {
+      if (ready) return;
+      globe.pause();
+      ready = !!(globe.duration && isFinite(globe.duration));
+      if (ready) window.requestAnimationFrame(drift);
+    }
+    if (globe.readyState >= 1) boot();
+    globe.addEventListener('loadedmetadata', boot);
+
+    // If seeking is not permitted (some mobile browsers refuse to
+    // scrub without a gesture), fall back to a plain slow loop so
+    // the hero is never a frozen frame.
+    globe.addEventListener('error', loopInstead);
+    window.setTimeout(function () { if (!ready) loopInstead(); }, 6000);
+
+    function loopInstead() {
+      if (spin) return;
+      spin = true;
+      globe.loop = true;
+      var p = globe.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+
+    function measure() {
+      var max = document.body.scrollHeight - window.innerHeight;
+      var progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      want = progress * globe.duration;
+    }
+
+    function drift() {
+      window.requestAnimationFrame(drift);
+      if (!ready || spin) return;
+      measure();
+      have += (want - have) * 0.12;
+      if (Math.abs(want - have) > 0.004) {
+        try { globe.currentTime = have; } catch (e) { loopInstead(); }
+      }
+    }
+  }
+
+  /* ── 4. matrix rain ──────────────────────────────────────────
      Falling glyph columns behind Break. Latin and symbols only, so
      nothing here depends on a CJK font being installed. Paused when
      the section is off screen or the tab is hidden. */

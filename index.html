@@ -15,13 +15,17 @@
 <body>
 
 <a class="skip" href="#thesis">Skip to content</a>
+<div class="cosmos" aria-hidden="true">
+  <video id="globe" src="assets/video/globe.mp4" muted playsinline preload="auto" disablepictureinpicture></video>
+  <div class="haze"></div>
+</div>
 <canvas id="rain" aria-hidden="true"></canvas>
 
 <nav class="rail" aria-label="Sections">
   <ul>
     <li><a href="#thesis" data-dot="thesis"><em>Start</em><span></span></a></li>
-    <li><a href="#break"  data-dot="break"><em>Break</em><span></span></a></li>
     <li><a href="#build"  data-dot="build"><em>Build</em><span></span></a></li>
+    <li><a href="#break"  data-dot="break"><em>Break</em><span></span></a></li>
     <li><a href="#feel"   data-dot="feel"><em>Feel</em><span></span></a></li>
     <li><a href="#path"   data-dot="path"><em>Path</em><span></span></a></li>
     <li><a href="#hire"   data-dot="hire"><em>Hire</em><span></span></a></li>
@@ -68,75 +72,10 @@
 
 <main>
 
-<!-- ══════════ BREAK ══════════ -->
-<section class="section sec-break" id="break" data-theme="break">
-  <div class="wrap">
-    <p class="eyebrow reveal">01 / Break</p>
-    <h2 class="reveal">Security</h2>
-    <p class="section-lede reveal">
-      One of the fields I went deep in. I'd rather be the one who finds the hole
-      than the one who reads about it in the incident report.
-    </p>
-
-    <div class="term reveal" aria-hidden="true">
-      <div class="term-bar"><i></i><i></i><i></i><b>oliver@break ~ %</b></div>
-      <pre class="term-body"><span class="p">$</span> whoami
-<span class="o">security engineer who also ships product</span>
-<span class="p">$</span> cat approach.txt
-<span class="o">enumerate everything. assume nothing.
-the bug is almost never where the docs say it is.</span>
-<span class="p">$</span> ls ~/labs
-<span class="o">proving-grounds/  hacksmarter/  hack-the-box/
-malware-analysis/  pcap-nids-agent/</span>
-<span class="p">$</span> <span class="cur">▊</span></pre>
-    </div>
-
-    <div class="grid">
-      <div class="col reveal">
-        <h3>I run the labs</h3>
-        <p>
-          <b>Proving Grounds</b>, <b>HackSmarter</b>, <b>Hack The Box</b>.
-          Enumeration, exploitation, privesc, Linux and Windows. Favourite part
-          of the week.
-        </p>
-        <p class="note">
-          No OSCP. The lab work is real, the cert isn't mine to claim.
-        </p>
-      </div>
-
-      <div class="col reveal">
-        <h3>I take malware apart</h3>
-        <p>
-          Worked the <i>Practical Malware Analysis</i> labs end to end. Static
-          triage, dynamic behaviour in a sandbox, disassembler when the binary
-          got shy.
-        </p>
-      </div>
-
-      <div class="col reveal">
-        <h3>I built a detector</h3>
-        <p>
-          A PCAP agent with its own MCP server. It feeds suspicious flows to an
-          LLM analyst loop instead of a ruleset, so it catches traffic a signature
-          walks straight past.
-        </p>
-      </div>
-
-      <div class="col reveal">
-        <h3>I've done it for real</h3>
-        <p>
-          Six months at <b>HTX</b> on AI and cybersecurity. Then an attachment at
-          <b>DART</b>. Both in <a href="#path">Path</a>.
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ BUILD ══════════ -->
 <section class="section sec-build" id="build" data-theme="build">
   <div class="wrap">
-    <p class="eyebrow reveal">02 / Build</p>
+    <p class="eyebrow reveal">01 / Build</p>
     <h2 class="reveal">Things I shipped</h2>
     <p class="section-lede reveal">
       Nobody asked for any of these. I built them anyway, then put them in front of
@@ -277,6 +216,71 @@ malware-analysis/  pcap-nids-agent/</span>
       </p>
       <ul class="stack" role="list"><li>Python</li><li>RAG</li><li>FAISS</li><li>Vector search</li></ul>
     </article>
+  </div>
+</section>
+
+<!-- ══════════ BREAK ══════════ -->
+<section class="section sec-break" id="break" data-theme="break">
+  <div class="wrap">
+    <p class="eyebrow reveal">02 / Break</p>
+    <h2 class="reveal">Security</h2>
+    <p class="section-lede reveal">
+      One of the fields I went deep in. I'd rather be the one who finds the hole
+      than the one who reads about it in the incident report.
+    </p>
+
+    <div class="term reveal" aria-hidden="true">
+      <div class="term-bar"><i></i><i></i><i></i><b>oliver@break ~ %</b></div>
+      <pre class="term-body"><span class="p">$</span> whoami
+<span class="o">security engineer who also ships product</span>
+<span class="p">$</span> cat approach.txt
+<span class="o">enumerate everything. assume nothing.
+the bug is almost never where the docs say it is.</span>
+<span class="p">$</span> ls ~/labs
+<span class="o">proving-grounds/  hacksmarter/  hack-the-box/
+malware-analysis/  pcap-nids-agent/</span>
+<span class="p">$</span> <span class="cur">▊</span></pre>
+    </div>
+
+    <div class="grid">
+      <div class="col reveal">
+        <h3>I run the labs</h3>
+        <p>
+          <b>Proving Grounds</b>, <b>HackSmarter</b>, <b>Hack The Box</b>.
+          Enumeration, exploitation, privesc, Linux and Windows. Favourite part
+          of the week.
+        </p>
+        <p class="note">
+          No OSCP. The lab work is real, the cert isn't mine to claim.
+        </p>
+      </div>
+
+      <div class="col reveal">
+        <h3>I take malware apart</h3>
+        <p>
+          Worked the <i>Practical Malware Analysis</i> labs end to end. Static
+          triage, dynamic behaviour in a sandbox, disassembler when the binary
+          got shy.
+        </p>
+      </div>
+
+      <div class="col reveal">
+        <h3>I built a detector</h3>
+        <p>
+          A PCAP agent with its own MCP server. It feeds suspicious flows to an
+          LLM analyst loop instead of a ruleset, so it catches traffic a signature
+          walks straight past.
+        </p>
+      </div>
+
+      <div class="col reveal">
+        <h3>I've done it for real</h3>
+        <p>
+          Six months at <b>HTX</b> on AI and cybersecurity. Then an attachment at
+          <b>DART</b>. Both in <a href="#path">Path</a>.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
