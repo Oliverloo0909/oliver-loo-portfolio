@@ -18,7 +18,7 @@
 html[data-section="thesis"]{--bg:#0d0f12;--bg-2:#161a20;--line:#272e38;--text:#eceef1;--dim:#bac0c7;--faint:#78828d;--accent:#ff8a4c;--accent-2:#c96a3a;--radius:12px;--cosmos-op:1;   --cosmos-filter:grayscale(1) contrast(3.6) brightness(1.12);}
 html[data-section="break"] {--bg:#000;--bg-2:#020a05;--line:#0e3d21;--text:#ccffdb;--dim:#4fdd88;--faint:#308a56;--accent:#00ff70;--accent-2:#00b74f;--radius:2px;--cosmos-op:.34; --cosmos-filter:grayscale(1) contrast(3.8) brightness(1.05) sepia(1) hue-rotate(72deg) saturate(6);}
 html[data-section="build"] {--bg:#14110d;--bg-2:#1e1913;--line:#342b21;--text:#f4eee5;--dim:#c9c0b4;--faint:#8d806f;--accent:#ff9b4a;--accent-2:#cc7530;--radius:16px;--cosmos-op:.42; --cosmos-filter:grayscale(1) contrast(3.5) brightness(1.05) sepia(.9) hue-rotate(-18deg) saturate(3);}
-html[data-section="feel"]  {--bg:#070a0f;--bg-2:#0b1017;--line:#1b2430;--text:#f2f4f8;--dim:#b5bdc9;--faint:#73808e;--accent:#ff9f5a;--accent-2:#c9743a;--radius:0;--cosmos-op:0;--cosmos-filter:grayscale(1) contrast(3.4) brightness(1);}
+html[data-section="feel"]  {--bg:#061220;--bg-2:#0a1a2c;--line:#1d3145;--text:#f2f6fb;--dim:#b8c6d6;--faint:#7a8ea3;--accent:#ff9f5a;--accent-2:#c9743a;--radius:0;--cosmos-op:0;--cosmos-filter:grayscale(1) contrast(3.4) brightness(1);}
 html[data-section="path"]  {--bg:#0b1017;--bg-2:#121924;--line:#22303f;--text:#e5ebf2;--dim:#b7c1cd;--faint:#728395;--accent:#68a8ff;--accent-2:#4a80c9;--radius:10px;--cosmos-op:.46; --cosmos-filter:grayscale(1) contrast(3.5) brightness(1.05) sepia(.75) hue-rotate(175deg) saturate(3.4);}
 html[data-section="hire"]  {--bg:#110d09;--bg-2:#1c160f;--line:#38291c;--text:#f7f0e7;--dim:#c9bdaf;--faint:#8c7e70;--accent:#ffb066;--accent-2:#d1843f;--radius:14px;--cosmos-op:.5;  --cosmos-filter:grayscale(1) contrast(3.5) brightness(1.1) sepia(.95) hue-rotate(-8deg) saturate(2.6);}
 
@@ -289,9 +289,14 @@ html.js .sec-thesis .scroll-hint{animation-delay:.88s}
 .sec-feel .eyebrow{color:var(--accent);margin-bottom:26px}
 
 .ride{position:relative;height:100vh;min-height:560px}
-.ride-stage{position:relative;height:100%;overflow:hidden;background:#05070a;
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.cloud{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ride-stage{position:relative;height:100%;overflow:hidden;background:transparent}
+
+/* The scene fades in and out at its own edges rather than sitting in a
+   bordered box, so the design section arrives as a dissolve out of the
+   page instead of a panel switching on. */
+.cloud{position:absolute;inset:0;width:100%;height:100%;display:block;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 82%,transparent 100%);
+  mask-image:linear-gradient(180deg,transparent 0%,#000 16%,#000 82%,transparent 100%)}
 
 /* The copy sits on the waterline. Apple-clean type: system sans, tight
    tracking, no brutalist furniture around it. */
