@@ -255,7 +255,7 @@ html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mo
 
 /* ═══════ FEEL — cloud over water ═══════ */
 
-.sec-feel{background:var(--bg);padding:clamp(64px,9vw,96px) 0 0}
+.sec-feel{background:var(--bg);padding:clamp(64px,9vw,96px) 0 clamp(64px,9vw,96px)}
 .spray-defs{position:absolute}
 .feel-wrap{display:block}
 .sec-feel .eyebrow{color:var(--accent);margin-bottom:26px}
@@ -280,14 +280,6 @@ html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mo
   font-size:clamp(15.5px,1.9vw,21px);line-height:1.5;letter-spacing:-.011em;
   color:rgba(251,251,253,.74);margin:0 auto;max-width:34em;
   text-shadow:0 2px 30px rgba(0,0,0,.6)}
-
-.credential{margin:clamp(56px,8vw,86px) 0 0;border-top:1px solid var(--line);
-  padding:26px 0 clamp(72px,10vw,110px);text-align:center}
-.cred-small{font-family:var(--mono);font-size:12px;letter-spacing:.13em;text-transform:uppercase;
-  color:var(--faint);margin:0 0 12px}
-.cred-big{font-family:var(--sans);font-weight:600;letter-spacing:-.025em;
-  font-size:clamp(20px,3.2vw,32px);color:var(--text);margin:0}
-.cred-big b{color:var(--accent);font-weight:600}
 
 @media (max-width:620px){
   .afloat{top:56%}
