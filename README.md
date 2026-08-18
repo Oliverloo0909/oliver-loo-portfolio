@@ -43,6 +43,18 @@ Three placeholders are left. Search and replace:
 Everything else is real: the Levanta App Store link, your LinkedIn, your phone
 number and email are all wired up.
 
+## The horizon image (needs one file)
+
+The background crossfades from the spinning globe to an orbital sunrise that
+rises as the Hire section arrives. Save that image as:
+
+```
+assets/video/horizon.jpg
+```
+
+Landscape, 1600px wide or more. Until it exists the crossfade still runs, it
+just fades to nothing, so nothing breaks.
+
 ## The avatar (needs your photos)
 
 The floating avatar changes persona per section and opens a chat panel. Right

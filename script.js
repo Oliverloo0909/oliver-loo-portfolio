@@ -37,15 +37,32 @@
     }
   }
 
+  // Crossfade the globe out and the orbital sunrise in as Hire
+  // approaches, so the background reads as one continuous move rather
+  // than a cut between two images.
+  var hireSec = document.getElementById('hire');
+  function horizon() {
+    if (!hireSec) return;
+    var r = hireSec.getBoundingClientRect(), vh = window.innerHeight;
+    // 0 while Hire is a screen away, 1 once its top reaches mid-viewport.
+    var h = 1 - (r.top - vh * 0.45) / (vh * 0.95);
+    h = Math.min(1, Math.max(0, h));
+    var e = h * h * (3 - 2 * h);
+    root.style.setProperty('--horizon-op', e.toFixed(3));
+    root.style.setProperty('--horizon-y', ((1 - e) * 16).toFixed(2) + '%');
+    root.style.setProperty('--globe-op', (1 - e * 0.92).toFixed(3));
+  }
+
   function queueTheme() {
     if (queued) return;
     queued = true;
-    window.requestAnimationFrame(applyTheme);
+    window.requestAnimationFrame(function () { applyTheme(); horizon(); });
   }
 
   window.addEventListener('scroll', queueTheme, { passive: true });
   window.addEventListener('resize', queueTheme, { passive: true });
   applyTheme();
+  horizon();
 
   /* ── 2. reveal on scroll ─────────────────────────────────── */
 
@@ -130,300 +147,160 @@
     }
   }
 
-  /* ── 4. rubble: word physics ─────────────────────────────────
-     A small rigid-body solver for the design section. Bodies are
-     oriented boxes (the word chips), integrated under gravity and
-     separated with sequential impulses. Rendered as DOM transforms
-     rather than canvas so the words stay real, styled, selectable
-     text and the pile is something you can actually grab. */
+  /* ── 4. the ride ─────────────────────────────────────────────
+     Scrolling into the design section pulls the title apart, then runs
+     every letter down a tube and lands them as the words I actually
+     care about. Scroll-scrubbed, so it moves only because you moved.
+     Positions come from the SVG path via getPointAtLength, mapped out
+     of viewBox units into pixels. */
 
-  var pen = document.getElementById('rubble');
+  var fall = document.getElementById('fallline');
+  var ride = document.getElementById('ride');
 
-  if (pen && !reduced) {
-    var chips  = [].slice.call(pen.querySelectorAll('.chip'));
-    var bodies = [];
-    var W = 0, H = 0;
-    var GRAV = 1900, REST = 0.18, FRIC = 0.42, ITER = 6;
-    var held = null, grabX = 0, grabY = 0, ptrX = 0, ptrY = 0;
-    var running = false, lastT = 0;
+  if (fall && ride && !reduced) {
+    var stage    = ride.querySelector('.ride-stage');
+    var pathEl   = document.getElementById('ridePath');
+    var letterBx = document.getElementById('rideLetters');
+    var WORDS    = ['JUICE', 'RESTRAINT', 'CONTRAST', 'MOTIF', 'GRAIN'];
 
-    function Body(el, i) {
-      this.el = el;
-      this.hw = el.offsetWidth / 2;
-      this.hh = el.offsetHeight / 2;
-      this.x  = 0; this.y = 0; this.a = 0;
-      this.vx = 0; this.vy = 0; this.va = 0;
-      var m = Math.max(this.hw * this.hh * 0.006, 0.6);
-      this.im = 1 / m;
-      this.iI = 1 / (m * (4 * this.hw * this.hw + 4 * this.hh * this.hh) / 12);
-      this.i  = i;
+    // Title into per-letter spans so it can come apart.
+    var titleText = fall.textContent;
+    fall.textContent = '';
+    var fallSpans = [];
+    for (var c = 0; c < titleText.length; c++) {
+      var sp = document.createElement('span');
+      sp.textContent = titleText[c] === ' ' ? ' ' : titleText[c];
+      fall.appendChild(sp);
+      fallSpans.push(sp);
     }
 
-    // Local axes of the box, given its rotation.
-    Body.prototype.axis = function (k) {
-      var c = Math.cos(this.a), s2 = Math.sin(this.a);
-      return k === 0 ? { x: c, y: s2 } : { x: -s2, y: c };
-    };
-
-    Body.prototype.corners = function () {
-      var u = this.axis(0), v = this.axis(1), out = [];
-      for (var sx = -1; sx <= 1; sx += 2) {
-        for (var sy = -1; sy <= 1; sy += 2) {
-          out.push({
-            x: this.x + u.x * this.hw * sx + v.x * this.hh * sy,
-            y: this.y + u.y * this.hw * sx + v.y * this.hh * sy
-          });
-        }
+    // Riders: one span per letter of the impact words.
+    var riders = [];
+    WORDS.forEach(function (w, wi) {
+      for (var i = 0; i < w.length; i++) {
+        var el = document.createElement('span');
+        el.className = 'rl' + (i === 0 ? ' rl-hot' : '');
+        el.textContent = w[i];
+        letterBx.appendChild(el);
+        riders.push({ el: el, w: wi, i: i, tx: 0, ty: 0 });
       }
-      return out;
-    };
-
-    function dot(a, b) { return a.x * b.x + a.y * b.y; }
-    function cross(a, b) { return a.x * b.y - a.y * b.x; }
-
-    function project(b, n) {
-      var cs = b.corners(), lo = Infinity, hi = -Infinity;
-      for (var i = 0; i < 4; i++) {
-        var d = dot(cs[i], n);
-        if (d < lo) lo = d;
-        if (d > hi) hi = d;
-      }
-      return { lo: lo, hi: hi };
-    }
-
-    // Separating-axis test across both boxes' face normals. Returns the
-    // axis of least penetration, pointing from A toward B.
-    function sat(A, B) {
-      var axes = [A.axis(0), A.axis(1), B.axis(0), B.axis(1)];
-      var best = Infinity, bn = null;
-      for (var i = 0; i < 4; i++) {
-        var n = axes[i];
-        var pa = project(A, n), pb = project(B, n);
-        var o = Math.min(pa.hi, pb.hi) - Math.max(pa.lo, pb.lo);
-        if (o <= 0) return null;
-        if (o < best) { best = o; bn = n; }
-      }
-      var d = { x: B.x - A.x, y: B.y - A.y };
-      if (dot(d, bn) < 0) bn = { x: -bn.x, y: -bn.y };
-      return { n: bn, depth: best };
-    }
-
-    // Deepest vertex of each box along the contact normal, averaged.
-    // One point is enough at this scale and keeps stacks settling.
-    function contact(A, B, n) {
-      var ca = A.corners(), cb = B.corners();
-      var pa = ca[0], da = -Infinity, pb = cb[0], db = Infinity, i, d;
-      for (i = 0; i < 4; i++) { d = dot(ca[i], n); if (d > da) { da = d; pa = ca[i]; } }
-      for (i = 0; i < 4; i++) { d = dot(cb[i], n); if (d < db) { db = d; pb = cb[i]; } }
-      return { x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2 };
-    }
-
-    function applyImpulse(b, p, jx, jy) {
-      if (b === held) return;
-      b.vx += jx * b.im;
-      b.vy += jy * b.im;
-      b.va += cross({ x: p.x - b.x, y: p.y - b.y }, { x: jx, y: jy }) * b.iI;
-    }
-
-    function solvePair(A, B) {
-      var m = sat(A, B);
-      if (!m) return;
-      var n = m.n;
-
-      var imA = A === held ? 0 : A.im, imB = B === held ? 0 : B.im;
-      var sum = imA + imB;
-      if (sum === 0) return;
-
-      var corr = Math.max(m.depth - 0.5, 0) / sum * 0.7;
-      A.x -= n.x * corr * imA; A.y -= n.y * corr * imA;
-      B.x += n.x * corr * imB; B.y += n.y * corr * imB;
-
-      var p = contact(A, B, n);
-      var ra = { x: p.x - A.x, y: p.y - A.y }, rb = { x: p.x - B.x, y: p.y - B.y };
-      var rv = {
-        x: (B.vx - B.va * rb.y) - (A.vx - A.va * ra.y),
-        y: (B.vy + B.va * rb.x) - (A.vy + A.va * ra.x)
-      };
-      var vn = dot(rv, n);
-      if (vn > 0) return;
-
-      var rnA = cross(ra, n), rnB = cross(rb, n);
-      var iiA = A === held ? 0 : A.iI, iiB = B === held ? 0 : B.iI;
-      var denom = sum + rnA * rnA * iiA + rnB * rnB * iiB;
-      if (denom <= 0) return;
-
-      var j = -(1 + REST) * vn / denom;
-      applyImpulse(A, p, -n.x * j, -n.y * j);
-      applyImpulse(B, p,  n.x * j,  n.y * j);
-
-      var t = { x: rv.x - n.x * vn, y: rv.y - n.y * vn };
-      var tl = Math.hypot(t.x, t.y);
-      if (tl < 0.0001) return;
-      t.x /= tl; t.y /= tl;
-      var jt = -dot(rv, t) / denom;
-      var max = j * FRIC;
-      if (jt > max) jt = max; else if (jt < -max) jt = -max;
-      applyImpulse(A, p, -t.x * jt, -t.y * jt);
-      applyImpulse(B, p,  t.x * jt,  t.y * jt);
-    }
-
-    // Walls as immovable half-planes; resolve the deepest corner only.
-    function solveWall(b, nx, ny, limit) {
-      if (b === held) return;
-      var cs = b.corners(), worst = 0, pt = null;
-      for (var i = 0; i < 4; i++) {
-        var d = limit - (cs[i].x * nx + cs[i].y * ny);
-        if (d > worst) { worst = d; pt = cs[i]; }
-      }
-      if (!pt) return;
-
-      b.x += nx * worst; b.y += ny * worst;
-
-      var r = { x: pt.x - b.x, y: pt.y - b.y };
-      var rvx = b.vx - b.va * r.y, rvy = b.vy + b.va * r.x;
-      var vn = rvx * nx + rvy * ny;
-      if (vn > 0) return;
-
-      var rn = cross(r, { x: nx, y: ny });
-      var denom = b.im + rn * rn * b.iI;
-      var j = -(1 + REST) * vn / denom;
-      applyImpulse(b, pt, nx * j, ny * j);
-
-      var tx = rvx - nx * vn, ty = rvy - ny * vn;
-      var tl = Math.hypot(tx, ty);
-      if (tl < 0.0001) return;
-      tx /= tl; ty /= tl;
-      var jt = -(rvx * tx + rvy * ty) / denom;
-      var max = j * FRIC;
-      if (jt > max) jt = max; else if (jt < -max) jt = -max;
-      applyImpulse(b, pt, tx * jt, ty * jt);
-    }
-
-    function layout() {
-      W = pen.clientWidth;
-      H = pen.clientHeight;
-      for (var i = 0; i < bodies.length; i++) {
-        var b = bodies[i];
-        b.hw = b.el.offsetWidth / 2;
-        b.hh = b.el.offsetHeight / 2;
-        b.x = b.hw + 20 + Math.abs(((i * 137) % Math.max(W - b.hw * 2 - 40, 1)));
-        b.y = -60 - i * 78;
-        b.a = ((i % 5) - 2) * 0.32;
-        b.vx = b.vy = b.va = 0;
-      }
-    }
-
-    function step(dt) {
-      var i, b;
-      for (i = 0; i < bodies.length; i++) {
-        b = bodies[i];
-        if (b === held) continue;
-        b.vy += GRAV * dt;
-        b.x += b.vx * dt; b.y += b.vy * dt; b.a += b.va * dt;
-        b.vx *= 0.995; b.vy *= 0.995; b.va *= 0.97;
-      }
-
-      if (held) {
-        // Pull the grabbed chip toward the pointer rather than teleporting
-        // it, so throwing it carries real momentum into the pile.
-        var tx = ptrX - grabX, ty = ptrY - grabY;
-        held.vx = (tx - held.x) / Math.max(dt, 0.001) * 0.42;
-        held.vy = (ty - held.y) / Math.max(dt, 0.001) * 0.42;
-        held.x += held.vx * dt; held.y += held.vy * dt;
-        held.va *= 0.8;
-      }
-
-      for (var k = 0; k < ITER; k++) {
-        for (i = 0; i < bodies.length; i++) {
-          b = bodies[i];
-          solveWall(b,  1,  0, 0);
-          solveWall(b, -1,  0, -W);
-          solveWall(b,  0, -1, -H);
-          if (b.y > H + 400) { b.y = -80; b.vy = 0; b.x = W / 2; }
-        }
-        for (i = 0; i < bodies.length; i++) {
-          for (var jx = i + 1; jx < bodies.length; jx++) solvePair(bodies[i], bodies[jx]);
-        }
-      }
-
-      for (i = 0; i < bodies.length; i++) {
-        b = bodies[i];
-        b.el.style.transform = 'translate(' + (b.x - b.hw).toFixed(1) + 'px,' +
-          (b.y - b.hh).toFixed(1) + 'px) rotate(' + b.a.toFixed(3) + 'rad)';
-      }
-    }
-
-    function frame(t) {
-      if (!running) return;
-      window.requestAnimationFrame(frame);
-      var dt = lastT ? Math.min((t - lastT) / 1000, 0.032) : 0.016;
-      lastT = t;
-      step(dt);
-    }
-
-    function pick(cx, cy) {
-      for (var i = bodies.length - 1; i >= 0; i--) {
-        var b = bodies[i];
-        var dx = cx - b.x, dy = cy - b.y;
-        var c = Math.cos(-b.a), s2 = Math.sin(-b.a);
-        var lx = dx * c - dy * s2, ly = dx * s2 + dy * c;
-        if (Math.abs(lx) <= b.hw && Math.abs(ly) <= b.hh) return b;
-      }
-      return null;
-    }
-
-    function toLocal(e) {
-      var r = pen.getBoundingClientRect();
-      ptrX = e.clientX - r.left;
-      ptrY = e.clientY - r.top;
-    }
-
-    pen.addEventListener('pointerdown', function (e) {
-      toLocal(e);
-      var b = pick(ptrX, ptrY);
-      if (!b) return;
-      held = b; grabX = ptrX - b.x; grabY = ptrY - b.y;
-      // Bring the grabbed chip to the front of the pile visually.
-      b.el.style.zIndex = 2;
-      pen.setPointerCapture(e.pointerId);
-      e.preventDefault();
     });
 
-    pen.addEventListener('pointermove', function (e) { if (held) toLocal(e); });
+    var VB_W = 1000, VB_H = 620;
+    var pathLen = 0, sc = 1, ox = 0, oy = 0;
 
-    function drop(e) {
-      if (!held) return;
-      held.el.style.zIndex = '';
-      held = null;
-      if (e && e.pointerId != null && pen.hasPointerCapture(e.pointerId)) {
-        pen.releasePointerCapture(e.pointerId);
+    function relayout() {
+      var W = stage.clientWidth, H = stage.clientHeight;
+      pathLen = pathEl.getTotalLength();
+      // preserveAspectRatio="xMidYMid meet" => uniform scale, centred.
+      sc = Math.min(W / VB_W, H / VB_H);
+      ox = (W - VB_W * sc) / 2;
+      oy = (H - VB_H * sc) / 2;
+
+      // Landing layout: words stacked and centred in the stage.
+      var lineH = riders.length ? riders[0].el.offsetHeight * 1.06 : 44;
+      var top   = (H - WORDS.length * lineH) / 2;
+      var k = 0;
+      WORDS.forEach(function (w, wi) {
+        var wide = 0, j;
+        for (j = 0; j < w.length; j++) wide += riders[k + j].el.offsetWidth;
+        var x = (W - wide) / 2;
+        for (j = 0; j < w.length; j++) {
+          var r = riders[k + j];
+          r.tx = x; r.ty = top + wi * lineH;
+          x += r.el.offsetWidth;
+        }
+        k += w.length;
+      });
+    }
+
+    // Timeline, in seconds. The title is held bold long enough to
+    // actually read it, then everything falls. Driven by a clock rather
+    // than scroll position: gravity should not depend on how fast
+    // someone happens to be spinning their wheel.
+    var HOLD   = 2.4;    // title readable and flashing
+    var SHED   = 0.9;    // title letters drop away
+    var STAG   = 0.045;  // gap between riders entering the tube
+    var TRAVEL = 1.9;    // one rider's run down the tube
+    var t0 = 0, playing = false, done = false;
+
+    function gravity(u) { return u * u; }          // accelerating, not linear
+    function smooth(u)  { return u * u * (3 - 2 * u); }
+
+    function paint(now) {
+      var t = (now - t0) / 1000;
+
+      // Phase one: title holds, then sheds its letters under gravity.
+      var shed = Math.min(1, Math.max(0, (t - HOLD) / SHED));
+      var g = gravity(shed);
+      for (var i = 0; i < fallSpans.length; i++) {
+        var d = (i % 7) - 3;
+        fallSpans[i].style.transform =
+          'translate(' + (d * 16 * g).toFixed(1) + 'px,' + (g * (150 + (i % 5) * 60)).toFixed(1) + 'px) ' +
+          'rotate(' + (d * 30 * g).toFixed(1) + 'deg)';
+        fallSpans[i].style.opacity = Math.max(0, 1 - shed * 1.6).toFixed(2);
       }
+
+      // Phase two: riders run the tube, each starting a beat after the last.
+      var last = 0;
+      for (var r = 0; r < riders.length; r++) {
+        var rd = riders[r];
+        var lt = (t - HOLD - r * STAG) / TRAVEL;
+        lt = Math.min(1, Math.max(0, lt));
+        last = Math.max(last, lt);
+
+        var u = gravity(lt);
+        var pt = pathEl.getPointAtLength(u * pathLen);
+        var px = ox + pt.x * sc, py = oy + pt.y * sc;
+
+        var land = lt <= 0.72 ? 0 : smooth((lt - 0.72) / 0.28);
+        var x = px + (rd.tx - px) * land;
+        var y = py + (rd.ty - py) * land;
+        var spin = (1 - land) * (420 * (1 - u) + (r % 2 ? 200 : -200) * u);
+        var sz = 0.7 + 0.3 * land;
+
+        rd.el.style.transform =
+          'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) ' +
+          'rotate(' + spin.toFixed(1) + 'deg) scale(' + sz.toFixed(3) + ')';
+        rd.el.style.opacity = lt > 0.001 ? 1 : 0;
+      }
+
+      if (last >= 1 && t > HOLD + riders.length * STAG + TRAVEL) {
+        playing = false; done = true;
+        return;
+      }
+      window.requestAnimationFrame(paint);
     }
-    pen.addEventListener('pointerup', drop);
-    pen.addEventListener('pointercancel', drop);
 
-    for (var c = 0; c < chips.length; c++) bodies.push(new Body(chips[c], c));
-    layout();
-
-    window.addEventListener('resize', layout, { passive: true });
-
-    function kick() {
-      if (running) return;
-      running = true; lastT = 0;
-      window.requestAnimationFrame(frame);
+    function play() {
+      if (playing || done) return;
+      playing = true;
+      relayout();
+      fall.classList.remove('flash');
+      void fall.offsetWidth;              // restart the flash animation
+      fall.classList.add('flash');
+      t0 = performance.now();
+      window.requestAnimationFrame(paint);
     }
 
-    // Only simulate while the section is on screen.
+    relayout();
+    window.addEventListener('resize', relayout, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
+
+    // Plays when the section actually arrives, and re-arms once it has
+    // fully left, so coming back a second time replays it rather than
+    // showing a finished pile. No timed fallback here on purpose: a
+    // timer would fire while the reader is still at the top of the
+    // page, and they would scroll down to an animation already over.
     if (hasIO) {
       new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting) kick(); else running = false;
-      }, { threshold: 0.05 }).observe(pen);
+        var e = entries[0];
+        if (e.isIntersecting && e.intersectionRatio >= 0.35) play();
+        else if (!e.isIntersecting) { done = false; playing = false; }
+      }, { threshold: [0, 0.35] }).observe(ride);
+    } else {
+      window.setTimeout(play, 600);
     }
-
-    // Safety net, same reasoning as the reveals: if the observer never
-    // delivers, the chips would sit parked off-canvas forever and the
-    // section would render as an empty box. Start regardless.
-    window.setTimeout(kick, 2500);
   }
 
   /* ── 5. avatar + chat ────────────────────────────────────────

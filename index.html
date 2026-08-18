@@ -17,6 +17,9 @@
 <a class="skip" href="#thesis">Skip to content</a>
 <div class="cosmos" aria-hidden="true">
   <video id="globe" src="assets/video/globe.mp4" muted playsinline preload="auto" disablepictureinpicture></video>
+  <!-- Orbital sunrise. Rises and crossfades over the globe as the Hire
+       section arrives. Add assets/video/horizon.jpg and it appears. -->
+  <div class="horizon"></div>
   <div class="haze"></div>
 </div>
 <canvas id="rain" aria-hidden="true"></canvas>
@@ -296,37 +299,29 @@ malware-analysis/  pcap-nids-agent/</span>
 
     <div class="feel-head">
       <p class="eyebrow">03 / Feel</p>
-      <h2 class="stencil">I love practising<br>my creativity<br><span class="stencil-out">through design</span></h2>
-      <p class="feel-kicker">
-        Everything below is something I actually sweated over. Grab one and
-        throw it.
-      </p>
+      <h2 class="fallline" id="fallline">I love practising my creativity through design</h2>
+      <p class="feel-kicker">Keep going. It falls apart.</p>
     </div>
+  </div>
 
-    <div class="rubble" id="rubble">
-      <div class="rubble-note">drag them</div>
-      <div class="chips" id="chips">
-        <span class="chip w-a">squash &amp; stretch</span>
-        <span class="chip w-b">screen shake</span>
-        <span class="chip w-c">confetti</span>
-        <span class="chip w-d">overshoot</span>
-        <span class="chip w-e">nearest neighbour</span>
-        <span class="chip w-a">ripple</span>
-        <span class="chip w-b">plain then colour</span>
-        <span class="chip w-c">restraint</span>
-        <span class="chip w-d">motif</span>
-        <span class="chip w-e">juice</span>
-        <span class="chip w-a">easing</span>
-        <span class="chip w-b">pixels</span>
-        <span class="chip w-c">grain</span>
-        <span class="chip w-d">halftone</span>
-        <span class="chip w-e">stencil</span>
-        <span class="chip w-a">kerning</span>
-        <span class="chip w-b">contrast</span>
-        <span class="chip w-c">chrome</span>
-      </div>
+  <!-- The ride. Letters detach, run the tube, and land as the words
+       I actually care about. Scrubbed by scroll, not autoplayed. -->
+  <div class="ride" id="ride">
+    <div class="ride-stage">
+      <div class="ride-rule ride-rule-a"><span>DECONSTRUCT</span></div>
+      <svg class="ride-tube" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path id="ridePath" class="tube-line"
+          d="M 30 70 C 250 10 330 250 560 210 S 940 330 700 430 S 180 430 120 520 S 520 610 970 560"/>
+        <path class="tube-ghost"
+          d="M 30 70 C 250 10 330 250 560 210 S 940 330 700 430 S 180 430 120 520 S 520 610 970 560"/>
+      </svg>
+      <div class="ride-letters" id="rideLetters" aria-hidden="true"></div>
+      <p class="ride-alt">Juice. Restraint. Contrast. Motif. Grain.</p>
+      <div class="ride-rule ride-rule-b"><span>REASSEMBLE</span></div>
     </div>
+  </div>
 
+  <div class="wrap feel-wrap">
     <figure class="taped">
       <img src="assets/shots/flaneuse.png" alt="Flâneuse fitting room, a look on a model with a live look total panel" loading="lazy">
       <span class="tape tape-l" aria-hidden="true"></span>
@@ -341,7 +336,6 @@ malware-analysis/  pcap-nids-agent/</span>
       <p class="cred-small">Not just taste</p>
       <p class="cred-big">CS 148 · Computer Graphics · Stanford · <b>A+</b></p>
     </div>
-
   </div>
 </section>
 
