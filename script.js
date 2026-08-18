@@ -247,6 +247,9 @@
 
   if (avatar && chat) {
     var layers   = [].slice.call(avatar.querySelectorAll('.av-layer'));
+    var faceWrap = chat.querySelector('.chat-face');
+    var cfLayers = [].slice.call(chat.querySelectorAll('.cf-layer'));
+    var cfFront  = 0;
     var faceBtn  = document.getElementById('hireFace');
     var front    = 0;
     var roleTag  = document.getElementById('chatRole');
@@ -442,7 +445,9 @@
 
       if (!p.img) {
         layers.forEach(function (l) { l.classList.remove('on'); });
+        cfLayers.forEach(function (l) { l.classList.remove('on'); });
         avatar.classList.remove('has-shot');
+        if (faceWrap) faceWrap.classList.remove('has-shot');
         return;
       }
 
@@ -455,6 +460,19 @@
       };
       next.onerror = function () { avatar.classList.remove('has-shot'); };
       next.setAttribute('src', p.img);
+
+      // Header portrait follows the same persona, on its own layer pair.
+      if (faceWrap && cfLayers.length === 2) {
+        var cfNext = cfLayers[1 - cfFront];
+        cfNext.onload = function () {
+          faceWrap.classList.add('has-shot');
+          cfNext.classList.add('on');
+          cfLayers[cfFront].classList.remove('on');
+          cfFront = 1 - cfFront;
+        };
+        cfNext.onerror = function () { faceWrap.classList.remove('has-shot'); };
+        cfNext.setAttribute('src', p.img);
+      }
     }
 
     if (faceBtn) faceBtn.addEventListener('click', function () {

@@ -452,9 +452,22 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
 @keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
 .chat[hidden]{display:none}
 
-.chat-top{display:flex;align-items:center;justify-content:space-between;gap:10px;
+.chat-top{display:flex;align-items:center;gap:12px;
   padding:13px 15px;border-bottom:1px solid var(--line)}
-.chat-who{display:flex;flex-direction:column;line-height:1.25}
+
+/* The face you are talking to, mirrored from the bubble so the persona
+   in the header always matches the section you opened it from. */
+.chat-face{position:relative;width:46px;height:46px;flex:0 0 46px;border-radius:50%;
+  overflow:visible;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);border:1px solid var(--line)}
+.cf-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  border-radius:50%;opacity:0;transition:opacity .6s var(--ease)}
+.cf-layer.on{opacity:1}
+.chat-fallback{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.05em}
+.chat-face.has-shot .chat-fallback{display:none}
+.chat-live{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;
+  background:#4ec9a0;border:2px solid var(--bg-2)}
+.chat-who{display:flex;flex-direction:column;line-height:1.25;flex:1;min-width:0}
 .chat-who b{font-size:14.5px}
 .chat-who em{font-family:var(--mono);font-size:11px;font-style:normal;color:var(--faint);
   letter-spacing:.08em;text-transform:uppercase}
@@ -481,10 +494,33 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
   transition:border-color .18s var(--ease),color .18s var(--ease)}
 .ask:hover{border-color:var(--accent);color:var(--accent)}
 
+/* ── mobile ──────────────────────────────────────────────────
+   The panel becomes a bottom sheet rather than a floating card: on a
+   phone a 370px card anchored to a corner wastes the screen and leaves
+   the bubble sitting on top of its own chat. */
 @media (max-width:620px){
-  .avatar{width:60px;height:60px;right:16px;bottom:16px}
-  .chat{right:16px;bottom:88px;width:calc(100vw - 32px)}
+  .avatar{width:58px;height:58px}
   .avatar-label{display:none}
+
+  .chat{left:0;right:0;bottom:0;width:100%;max-height:82vh;
+    border-radius:20px 20px 0 0;border-left:0;border-right:0;border-bottom:0;
+    animation:sheetup .32s var(--ease)}
+  @keyframes sheetup{from{transform:translateY(100%)}to{transform:none}}
+
+  /* Grab handle, so it reads as a sheet you can dismiss. */
+  .chat-top{padding-top:18px}
+  .chat-top::before{content:"";position:absolute;top:7px;left:50%;transform:translateX(-50%);
+    width:38px;height:4px;border-radius:2px;background:var(--line)}
+  .chat-x{font-size:26px;padding:4px 8px}
+
+  .chat-log{padding:14px}
+  .bub{max-width:82%;font-size:15px}
+  .chat-asks{padding:12px 14px calc(14px + env(safe-area-inset-bottom,0px))}
+  .ask{font-size:12.5px;padding:8px 13px}     /* bigger tap targets */
+
+  /* The bubble would sit over the sheet, so it steps aside while open. */
+  .avatar.open{opacity:0;pointer-events:none}
+  .nudge{display:none}
 }
 
 /* ═══════ responsive ═══════ */
@@ -498,11 +534,30 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
   .entry{grid-template-columns:1fr;gap:8px}
   .entry-when{padding-top:0}
   .term-body{font-size:11.5px}
+
+  .sec-thesis{min-height:auto;padding:118px 0 84px}
+  .thesis-statement{font-size:clamp(34px,10vw,46px)}
+  .thesis-sub{font-size:17.5px;max-width:none}
+  .lede{max-width:none}
+  .lede p{font-size:16px}
+  .links{gap:10px 18px}
+  .links a{font-size:13px}
+  .section{padding:74px 0}
+  .wrap{padding:0 20px}
+  .show{gap:26px}
+  .art-levanta{min-height:330px}
+  .phone{width:min(58%,200px)}
 }
 @media (max-width:900px){
-  .cosmos video{left:50%;top:34%;width:150%;height:70%}
+  /* Portrait screens stack the copy full width, so the globe drops
+     below it instead of sitting behind it, and the scrim holds the
+     top of the frame solid where the text actually is. */
+  .cosmos video{left:50%;top:88%;width:180%;height:62%}
+  /* The stacked copy runs to roughly three quarters of the frame, so the
+     scrim stays solid that far down and the globe only reads below it. */
   .haze{background:
-    linear-gradient(180deg,transparent 0%,rgba(0,0,0,.35) 30%,rgba(0,0,0,.8) 58%,rgba(0,0,0,.92) 100%)}
+    linear-gradient(180deg,rgba(0,0,0,.97) 0%,rgba(0,0,0,.96) 60%,rgba(0,0,0,.86) 74%,
+      rgba(0,0,0,.4) 85%,rgba(0,0,0,.1) 95%,transparent 100%)}
 }
 
 @media (prefers-reduced-motion:reduce){
