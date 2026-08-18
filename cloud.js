@@ -1,9 +1,10 @@
 /* Volumetric cloud for the design section.
    Raw WebGL: one fullscreen triangle and a raymarching fragment shader.
-   The form is generated per pixel from noise, so there is no texture,
-   no model and no library involved. Renders at a fraction of device
-   resolution and only while the section is on screen, because 40 march
-   steps of 4-octave noise per pixel is the whole cost of the effect. */
+   A drifting cloud above a water plane, with the reflection marched
+   through the same volume rather than mirrored, so ripples distort what
+   is actually there. No texture, no model, no library. Renders below
+   native resolution and only while the section is on screen: rays that
+   hit water march the cloud twice, which is the whole cost here. */
 (function () {
   'use strict';
 
@@ -33,40 +34,62 @@
     'float fbm(vec3 p){float s=0.0,a=0.5;',
     ' for(int i=0;i<4;i++){s+=a*noise(p);p*=2.03;a*=0.5;}return s;}',
 
-    // A slab of noise that thins out vertically, so it reads as one
-    // drifting mass rather than fog filling the frame.
-    'float dens(vec3 p){p.x+=T*0.045;p.z+=T*0.02;',
-    ' float d=fbm(p*1.05)-0.44;',
-    ' d-=smoothstep(0.0,1.7,abs(p.y))*0.55;',
+    // A slab of noise sitting above the water, drifting slowly.
+    'float dens(vec3 p){p.x+=T*0.040;p.z+=T*0.018;',
+    ' float d=fbm(p*0.95)-0.44;',
+    ' d-=smoothstep(0.0,1.9,abs(p.y-1.75))*0.55;',
     ' return clamp(d,0.0,1.0);}',
 
-    'void main(){',
-    ' vec2 uv=(gl_FragCoord.xy*2.0-R)/R.y;',
-    ' vec3 ro=vec3(0.0,0.05,-4.0);',
-    ' vec3 rd=normalize(vec3(uv,1.55));',
-    ' vec4 acc=vec4(0.0);float t=1.3;',
-    ' for(int i=0;i<40;i++){',
-    '   if(acc.a>0.96) break;',
-    '   vec3 pos=ro+rd*t;',
-    '   float d=dens(pos);',
+    'vec3 sky(vec3 rd){float h=clamp(rd.y*0.5+0.5,0.0,1.0);',
+    ' vec3 c=mix(vec3(0.034,0.042,0.058),vec3(0.075,0.090,0.130),h);',
+    ' c+=vec3(0.30,0.13,0.05)*pow(1.0-h,5.0);return c;}',
+
+    'vec4 march(vec3 ro,vec3 rd){vec4 acc=vec4(0.0);float t=0.6;',
+    ' for(int i=0;i<32;i++){',
+    '   if(acc.a>0.95) break;',
+    '   vec3 p=ro+rd*t;',
+    '   if(t>14.0) break;',
+    '   float d=dens(p);',
     '   if(d>0.012){',
-    // Cheap scattering: compare density toward the light to get a normal-ish term.
-    '     float lit=clamp((d-dens(pos+vec3(0.36,0.52,-0.22)))*2.6,0.0,1.0);',
-    '     vec3 col=mix(vec3(0.26,0.29,0.38),vec3(1.0,0.98,0.96),lit);',
+    '     float lit=clamp((d-dens(p+vec3(0.34,0.50,-0.20)))*2.8,0.0,1.0);',
+    '     vec3 col=mix(vec3(0.24,0.27,0.36),vec3(1.0,0.98,0.96),lit);',
     '     col=mix(col,vec3(1.0,0.60,0.32),lit*lit*0.42);',
-    '     col=mix(col,vec3(0.36,0.58,1.0),(1.0-lit)*0.30);',
+    '     col=mix(col,vec3(0.34,0.56,1.0),(1.0-lit)*0.26);',
     '     float al=d*0.60;',
     '     acc.rgb+=(1.0-acc.a)*col*al;',
     '     acc.a+=(1.0-acc.a)*al;',
     '   }',
-    '   t+=max(0.07,0.15-d*0.09);',
+    '   t+=max(0.08,0.16-d*0.09);',
     ' }',
-    ' float h=uv.y*0.5+0.5;',
-    ' vec3 sky=mix(vec3(0.030,0.036,0.050),vec3(0.075,0.085,0.125),h);',
-    ' sky+=vec3(0.22,0.10,0.04)*pow(1.0-h,3.5);',
-    ' vec3 outc=sky*(1.0-acc.a)+acc.rgb;',
-    ' outc=pow(max(outc,0.0),vec3(0.94));',
-    ' gl_FragColor=vec4(outc,1.0);',
+    ' return acc;}',
+
+    'void main(){',
+    ' vec2 uv=(gl_FragCoord.xy*2.0-R)/R.y;',
+    ' vec3 ro=vec3(0.0,0.62,-4.0);',
+    ' vec3 rd=normalize(vec3(uv,1.5));',
+    ' vec3 col;',
+    ' if(rd.y<-0.002){',
+    // Rays heading down hit the water plane at y=0. Perturb its normal
+    // with crossing waves plus drifting noise, reflect, and march the
+    // same cloud again: the reflection is the real cloud, not a flip.
+    '   float tw=-ro.y/rd.y;',
+    '   vec3 wp=ro+rd*tw;',
+    '   float w1=sin(wp.x*3.1+T*1.05)+sin(wp.z*3.9-T*0.82);',
+    '   float w2=noise(vec3(wp.xz*1.7,T*0.33))*2.0-1.0;',
+    '   vec3 n=normalize(vec3(w1*0.035+w2*0.055,1.0,w1*0.028+w2*0.048));',
+    '   vec3 rr=reflect(rd,n);rr.y=abs(rr.y);',
+    '   vec4 a=march(vec3(wp.x,0.03,wp.z),rr);',
+    '   vec3 refl=sky(rr)*(1.0-a.a)+a.rgb;',
+    '   float fres=pow(1.0-clamp(dot(-rd,n),0.0,1.0),3.0);',
+    '   col=mix(vec3(0.012,0.020,0.033),refl,clamp(0.26+fres*0.90,0.0,1.0));',
+    // Water reads darker close to the camera and mirror-like far away.
+    '   col*=mix(0.50,1.0,clamp(1.0+rd.y*2.1,0.0,1.0));',
+    ' } else {',
+    '   vec4 a=march(ro,rd);',
+    '   col=sky(rd)*(1.0-a.a)+a.rgb;',
+    ' }',
+    ' col=pow(max(col,0.0),vec3(0.92));',
+    ' gl_FragColor=vec4(col,1.0);',
     '}'
   ].join('\n');
 
@@ -103,7 +126,7 @@
   var uR = gl.getUniformLocation(prog, 'R');
   var uT = gl.getUniformLocation(prog, 'T');
 
-  var SCALE = 0.6;                       // render below native, then upscale
+  var SCALE = 0.55;                       // render below native, then upscale
   function resize() {
     var w = Math.max(1, Math.round(cv.clientWidth * SCALE));
     var h = Math.max(1, Math.round(cv.clientHeight * SCALE));
