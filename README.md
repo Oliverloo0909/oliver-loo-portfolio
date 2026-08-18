@@ -44,40 +44,20 @@ Three placeholders are left. Search and replace:
 Everything else is real: the Levanta App Store link, your LinkedIn, your phone
 number and email are all wired up.
 
-## The horizon image (needs one file)
+## Images
 
-The background crossfades from the spinning globe to an orbital sunrise that
-rises as the Hire section arrives. Save that image as:
+Both are in place:
 
-```
-assets/video/horizon.jpg
-```
+- `assets/video/horizon.jpg` — the orbital sunrise that rises behind the Hire
+  section, cross-fading out of the globe.
+- `assets/avatar/oliver.jpg` (320px, the floating bubble) and
+  `assets/avatar/oliver-lg.jpg` (640px, the portrait beside the call to action).
+  Both are square crops of the same headshot.
 
-Landscape, 1600px wide or more. Until it exists the crossfade still runs, it
-just fades to nothing, so nothing breaks.
-
-## The avatar (needs your photos)
-
-The floating avatar changes persona per section and opens a chat panel. Right
-now it shows an "OL" monogram because the image files don't exist yet. Drop
-these into `assets/avatar/` and it picks them up automatically. No code change
-needed, and any file that's missing just falls back to the monogram.
-
-| File | Section | Persona |
-|---|---|---|
-| `thesis.jpg` | hero | professional headshot |
-| `builder.jpg` | Build | builder |
-| `hacker.jpg` | Break | hacker |
-| `artist.jpg` | Feel | artist |
-| `life.jpg` | Path | off the clock, tennis or ski |
-| `hire.jpg` | Hire | approachable, available |
-
-Square crops, roughly 300×300, are ideal.
-
-**About the Seedance morph video.** The avatar is currently six stills swapped by
-section, which is the version that works today. If you produce the morph video
-instead, tell me and I'll swap the `<img>` for a scrubbed `<video>` so the
-persona transition animates between sections rather than cutting.
+The floating avatar shows the photo on the first and last sections and falls
+back to an "OL" monogram in between. To give Build, Break, Feel or Path their
+own portrait, drop a file in `assets/avatar/` and point `PERSONA` in
+[script.js](script.js) at it. The two image layers cross-fade automatically.
 
 ## The chat answers
 

@@ -312,6 +312,30 @@ html[data-section="break"] h2,html[data-section="break"] h3{font-family:var(--mo
 .bullets li::marker{color:var(--accent)}
 
 /* ═══════ HIRE ═══════ */
+
+.hire-row{display:grid;grid-template-columns:clamp(200px,22vw,264px) minmax(0,1fr);
+  gap:clamp(28px,4.5vw,56px);align-items:start}
+
+.hire-face{position:relative;padding:0;border:0;background:none;cursor:pointer;
+  border-radius:50%;display:block;width:100%;aspect-ratio:1;
+  transition:transform .3s var(--ease)}
+.hire-face img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;
+  border:2px solid var(--line);box-shadow:0 18px 50px rgba(0,0,0,.5);
+  transition:border-color .3s var(--ease)}
+.hire-face:hover{transform:translateY(-5px)}
+.hire-face:hover img{border-color:var(--accent)}
+.hire-face-cta{position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);
+  white-space:nowrap;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--bg);background:var(--accent);
+  padding:6px 13px;border-radius:100px}
+
+.hire-copy h2{margin-top:-6px}
+
+@media (max-width:760px){
+  .hire-row{grid-template-columns:1fr;gap:38px;justify-items:start}
+  .hire-face{width:min(190px,52vw)}
+}
+
 .cv-box{display:flex;align-items:center;gap:20px;border:1px solid var(--line);border-radius:var(--radius);
   background:var(--bg-2);padding:22px 26px;margin:0 0 44px;
   transition:border-color .2s var(--ease),transform .2s var(--ease),background-color var(--swap) var(--ease)}
@@ -347,7 +371,11 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
 .avatar:hover{transform:translateY(-4px) scale(1.05)}
 .avatar:active{transform:scale(.97)}
 .avatar-shot{position:absolute;inset:0;border-radius:50%;overflow:hidden;display:none}
-.avatar-shot img{width:100%;height:100%;object-fit:cover;display:block}
+/* Two stacked layers: the incoming persona fades up over the outgoing
+   one, so changing section never blinks through an empty bubble. */
+.av-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+  opacity:0;transition:opacity .75s var(--ease)}
+.av-layer.on{opacity:1}
 .avatar.has-shot .avatar-shot{display:block}
 .avatar.has-shot .avatar-fallback{display:none}
 .avatar-fallback{font-family:var(--mono);font-size:20px;font-weight:600;
@@ -361,6 +389,7 @@ footer p{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin:0}
   opacity:0;transition:opacity .25s var(--ease)}
 .avatar:hover .avatar-label{opacity:1}
 .avatar.open .avatar-ping{display:none}
+.avatar.stood-down{opacity:0;transform:translateY(16px) scale(.85);pointer-events:none}
 
 .chat{position:fixed;right:24px;bottom:112px;z-index:61;width:min(370px,calc(100vw - 48px));
   max-height:min(62vh,540px);display:flex;flex-direction:column;

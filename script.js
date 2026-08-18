@@ -192,7 +192,9 @@
   var chat   = document.getElementById('chat');
 
   if (avatar && chat) {
-    var shot     = document.getElementById('avatarImg');
+    var layers   = [].slice.call(avatar.querySelectorAll('.av-layer'));
+    var faceBtn  = document.getElementById('hireFace');
+    var front    = 0;
     var roleTag  = document.getElementById('chatRole');
     var log      = document.getElementById('chatLog');
     var asksWrap = document.getElementById('chatAsks');
@@ -201,12 +203,12 @@
     // Persona per section. Drop matching files into assets/avatar/ and
     // they appear; until then the monogram shows and nothing breaks.
     var PERSONA = {
-      thesis: { role: 'AI engineer',  img: 'assets/avatar/thesis.jpg' },
-      build:  { role: 'builder',      img: 'assets/avatar/builder.jpg' },
-      break:  { role: 'hacker',       img: 'assets/avatar/hacker.jpg' },
-      feel:   { role: 'artist',       img: 'assets/avatar/artist.jpg' },
-      path:   { role: 'off the clock', img: 'assets/avatar/life.jpg' },
-      hire:   { role: 'available',    img: 'assets/avatar/hire.jpg' }
+      thesis: { role: 'AI engineer',   img: 'assets/avatar/oliver.jpg' },
+      build:  { role: 'builder',       img: '' },
+      break:  { role: 'hacker',        img: '' },
+      feel:   { role: 'artist',        img: '' },
+      path:   { role: 'off the clock', img: '' },
+      hire:   { role: 'available',     img: 'assets/avatar/oliver.jpg' }
     };
 
     var ANSWERS = [
@@ -263,6 +265,7 @@
     var greeted = false;
     function open() {
       chat.hidden = false;
+      avatar.classList.remove('stood-down');
       avatar.classList.add('open');
       avatar.setAttribute('aria-expanded', 'true');
       if (!greeted) {
@@ -274,6 +277,7 @@
     function close() {
       chat.hidden = true;
       avatar.classList.remove('open');
+      if (root.getAttribute('data-section') === 'hire') avatar.classList.add('stood-down');
       avatar.setAttribute('aria-expanded', 'false');
     }
 
@@ -283,17 +287,42 @@
       if (e.key === 'Escape' && !chat.hidden) close();
     });
 
-    // Persona follows the section theme.
+    // Persona follows the section theme, cross-fading between the two
+    // image layers. An empty img means no photo for that persona yet, so
+    // it fades back to the monogram rather than showing a broken frame.
+    var showing = null;
+
     function dressUp() {
       var key = root.getAttribute('data-section') || 'thesis';
       var p = PERSONA[key] || PERSONA.thesis;
       if (roleTag) roleTag.textContent = p.role;
-      if (shot && shot.getAttribute('src') !== p.img) {
-        shot.onload  = function () { avatar.classList.add('has-shot'); };
-        shot.onerror = function () { avatar.classList.remove('has-shot'); };
-        shot.setAttribute('src', p.img);
+
+      // The big portrait in Hire replaces the floating bubble there.
+      avatar.classList.toggle('stood-down', key === 'hire' && chat.hidden);
+
+      if (p.img === showing) return;
+      showing = p.img;
+
+      if (!p.img) {
+        layers.forEach(function (l) { l.classList.remove('on'); });
+        avatar.classList.remove('has-shot');
+        return;
       }
+
+      var next = layers[1 - front];
+      next.onload = function () {
+        avatar.classList.add('has-shot');
+        next.classList.add('on');
+        layers[front].classList.remove('on');
+        front = 1 - front;
+      };
+      next.onerror = function () { avatar.classList.remove('has-shot'); };
+      next.setAttribute('src', p.img);
     }
+
+    if (faceBtn) faceBtn.addEventListener('click', function () {
+      if (chat.hidden) open(); else close();
+    });
     new MutationObserver(dressUp).observe(root, { attributes: true, attributeFilter: ['data-section'] });
     dressUp();
   }
