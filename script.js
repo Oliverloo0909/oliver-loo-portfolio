@@ -205,8 +205,8 @@
     var PERSONA = {
       thesis: { role: 'AI engineer',   img: 'assets/avatar/oliver.jpg' },
       build:  { role: 'builder',       img: 'assets/avatar/builder.jpg' },
-      break:  { role: 'hacker',        img: '' },
-      feel:   { role: 'artist',        img: '' },
+      break:  { role: 'hacker',        img: 'assets/avatar/hacker.jpg' },
+      feel:   { role: 'artist',        img: 'assets/avatar/artist.jpg' },
       path:   { role: 'off the clock', img: '' },
       hire:   { role: 'available',     img: 'assets/avatar/oliver.jpg' }
     };
