@@ -201,46 +201,7 @@
     }
   }
 
-  /* ── 4. rain in the title ────────────────────────────────────
-     Splits the design headline into letters and drops them in when the
-     section arrives, so the text lands on the water rather than fading
-     up into place. Re-arms on exit so it plays again on a second pass. */
-
-  var afloat = document.querySelector('.afloat');
-
-  if (afloat && !reduced && hasIO) {
-    // The headline is optional here. When there is one, split it into
-    // letters so they can rain in; without it the class toggle below
-    // still drives the body copy surfacing.
-    var title = afloat.querySelector('.afloat-title');
-
-    if (title) {
-      var words = title.textContent.split(' ');
-      title.textContent = '';
-
-      words.forEach(function (word, wi) {
-        if (wi) title.appendChild(document.createTextNode(' '));
-        for (var i = 0; i < word.length; i++) {
-          var sp = document.createElement('span');
-          sp.textContent = word[i];
-          title.appendChild(sp);
-        }
-      });
-
-      [].slice.call(title.querySelectorAll('span')).forEach(function (sp, i) {
-        // Slightly uneven delays so it reads as rain, not a wave.
-        sp.style.animationDelay = (i * 0.055 + (i % 3) * 0.02).toFixed(3) + 's';
-      });
-    }
-
-    new IntersectionObserver(function (entries) {
-      var e = entries[0];
-      if (e.isIntersecting && e.intersectionRatio >= 0.3) afloat.classList.add('rain');
-      else if (!e.isIntersecting) afloat.classList.remove('rain');
-    }, { threshold: [0, 0.3] }).observe(afloat);
-  }
-
-  /* ── 5. avatar + chat ────────────────────────────────────────
+  /* ── 4. avatar + chat ────────────────────────────────────────
      The avatar changes persona with the section, and opens a panel of
      canned questions. Answers are local, so this works with no API key
      and no network. ANSWERS is the only thing to edit to change what
@@ -268,7 +229,6 @@
       thesis: { role: 'AI engineer',   img: 'assets/avatar/oliver.jpg' },
       build:  { role: 'builder',       img: 'assets/avatar/builder.jpg' },
       break:  { role: 'hacker',        img: 'assets/avatar/hacker.jpg' },
-      feel:   { role: 'artist',        img: 'assets/avatar/artist.jpg' },
       path:   { role: 'off the clock', img: 'assets/avatar/oliver.jpg' },
       hire:   { role: 'available',     img: 'assets/avatar/oliver.jpg' }
     };
@@ -513,7 +473,7 @@
     dressUp();
   }
 
-  /* ── 6. matrix rain ──────────────────────────────────────────
+  /* ── 5. matrix rain ──────────────────────────────────────────
      Falling glyph columns behind Break. Latin and symbols only, so
      nothing here depends on a CJK font being installed. Paused when
      the section is off screen or the tab is hidden. */

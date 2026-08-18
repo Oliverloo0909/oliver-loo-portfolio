@@ -4,7 +4,6 @@ Static portfolio site. No build step, no dependencies, no external requests.
 
 ```
 index.html          the page. All copy lives here, edit it directly
-cloud.js            WebGL cloud over reflective water, design section
 style.css           six themes. Palettes are the [data-section] blocks at the top
 script.js           theme switching on scroll, reveal animations, matrix rain
 resume.html         print-styled résumé, the source for the PDF
