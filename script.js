@@ -261,7 +261,7 @@
       build:  { role: 'builder',       img: 'assets/avatar/builder.jpg' },
       break:  { role: 'hacker',        img: 'assets/avatar/hacker.jpg' },
       feel:   { role: 'artist',        img: 'assets/avatar/artist.jpg' },
-      path:   { role: 'off the clock', img: '' },
+      path:   { role: 'off the clock', img: 'assets/avatar/oliver.jpg' },
       hire:   { role: 'available',     img: 'assets/avatar/oliver.jpg' }
     };
 
