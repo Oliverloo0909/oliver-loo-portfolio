@@ -204,7 +204,7 @@
     // they appear; until then the monogram shows and nothing breaks.
     var PERSONA = {
       thesis: { role: 'AI engineer',   img: 'assets/avatar/oliver.jpg' },
-      build:  { role: 'builder',       img: '' },
+      build:  { role: 'builder',       img: 'assets/avatar/builder.jpg' },
       break:  { role: 'hacker',        img: '' },
       feel:   { role: 'artist',        img: '' },
       path:   { role: 'off the clock', img: '' },
