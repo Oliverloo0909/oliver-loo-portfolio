@@ -293,23 +293,21 @@
 
     var ANSWERS = [
       { q: 'What are you looking for?',
-        a: "AI engineering or product engineering, Singapore or remote, from September 2026. I'm best somewhere I get to build the model layer <b>and</b> the thing around it." },
+        a: "AI or product engineering. Singapore or remote, from September 2026." },
       { q: 'What have you shipped?',
-        a: "<b>Levanta</b>, an AI personal trainer live on the App Store. <b>funhop</b>, a Singapore night-planner that's live right now. Two language games on one engine, and <b>Bao Bae</b>, a RAG therapy platform. All solo." },
+        a: "<b>Levanta</b>, an AI personal trainer on the App Store. <b>funhop</b>, a Singapore night-planner, live. Two language games on one engine, and <b>Bao Bae</b>, a RAG therapy platform. All solo." },
       { q: "What's the AI work?",
-        a: "A Gemini coach in Levanta that parses plain-text workouts. An LLM pipeline in funhop that turns messy Telegram posts into structured events. RAG over clinical material with FAISS. At HTX I ran lightweight LLMs in virtualised Linux and worked with vision-language models." },
+        a: "A Gemini coach in Levanta. An LLM pipeline in funhop turning messy posts into structured events. RAG over clinical material with FAISS. At HTX, lightweight LLMs in virtualised Linux and vision-language models." },
       { q: 'Are you actually into security?',
-        a: "Yes. It's my degree track. Proving Grounds, HackSmarter and Hack The Box in my own time, the <i>Practical Malware Analysis</i> labs, and a PCAP intrusion detection agent I built around an LLM analyst loop. No OSCP, and I won't pretend otherwise." },
-      { q: 'Best bug you ever found?',
-        a: "85% of funhop's events table was silently corrupt for weeks. No errors, no alerts. Signed image URLs were losing their query strings, and I'd been faking detail URLs from title slugs that had 404'd since launch. Both fixes are encoded in the pipeline now." },
+        a: "It's my degree track. Proving Grounds, HackSmarter and Hack The Box in my own time, the <i>Practical Malware Analysis</i> labs, and a PCAP intrusion detection agent built around an LLM analyst loop." },
       { q: 'Why generalist and not specialist?',
-        a: "Because the handoffs are where things die. Knowing security, AI, mobile and design means I can take a model from a notebook to the App Store myself, and I know what breaks at each seam." },
+        a: "The handoffs are where things die. Security, AI, mobile and design means I can take a model from a notebook to the App Store myself." },
       { q: 'What do you do outside work?',
-        a: "I coach <b>tennis</b>, I ski, and I'm in the gym most days. I model on the side and make content. It's all the same instinct as the work: pick something hard, get properly good at it." },
+        a: "I coach <b>tennis</b>, I ski, and I'm in the gym most days. I model on the side and make content." },
       { q: 'Give me a fun fact',
-        a: "I can hit a forehand on <b>both</b> sides. No backhand required. It confuses everyone I coach, and occasionally it wins me points." },
+        a: "I can hit a forehand on <b>both</b> sides. No backhand required." },
       { q: 'How do I reach you?',
-        a: "<a href=\"mailto:oliverloo09@gmail.com\">oliverloo09@gmail.com</a>, or <a href=\"https://www.linkedin.com/in/oliver-loo-8ab131157\">LinkedIn</a>. Résumé is at the bottom of this page. Instagram is <a href=\"https://www.instagram.com/yutasakthefirst/\">@yutasakthefirst</a>." }
+        a: "<a href=\"mailto:oliverloo09@gmail.com\">oliverloo09@gmail.com</a> or <a href=\"https://www.linkedin.com/in/oliver-loo-8ab131157\">LinkedIn</a>. Résumé is at the bottom of this page." }
     ];
 
     function bubble(kind, html) {
