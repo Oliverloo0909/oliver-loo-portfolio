@@ -36,39 +36,34 @@
 
 <!-- ══════════ THESIS ══════════ -->
 <header class="section sec-thesis" id="thesis" data-theme="thesis">
-  <div class="wrap">
-    <p class="eyebrow reveal">Oliver Loo · AI engineer · Singapore, open to remote</p>
+  <div class="silk" aria-hidden="true"><i></i><i></i><i></i></div>
 
-    <h1 class="thesis-statement reveal">Hi, I'm Oliver.</h1>
-    <p class="thesis-sub reveal">
-      I love technology, and I love building things that are beautiful, unique,
-      fun, and actually solve something.
+  <div class="topbar">
+    <span class="topbar-role">AI Engineer · Singapore</span>
+    <nav class="topbar-nav" aria-label="Sections">
+      <a href="#build" data-tint="build">Work</a>
+      <a href="#path"  data-tint="path">Path</a>
+      <a href="#break" data-tint="break">Security</a>
+      <a href="#hire"  data-tint="hire">Contact</a>
+    </nav>
+  </div>
+
+  <div class="hero-mid">
+    <h1 class="bigname">Oliver Loo</h1>
+    <p class="bigsub">
+      I weave design, security and fun into everyday solutions.
     </p>
+  </div>
 
-    <div class="lede reveal">
-      <p>
-        Mostly that means putting AI into things people really use. A Gemini coach
-        in a training app on the App Store. A pipeline that turns messy Telegram
-        posts into a night out.
-      </p>
-      <p>
-        I work across <a href="#break" class="w w-break">security</a>,
-        <a href="#build" class="w w-build">AI</a>, mobile and design.
-      </p>
-      <p class="punch">Graduating August 2026. Looking for what's next.</p>
-    </div>
-
-    <ul class="links reveal" role="list">
-      <li><a href="mailto:oliverloo09@gmail.com">oliverloo09@gmail.com</a></li>
+  <div class="hero-foot">
+    <ul class="links" role="list">
+      <li><a href="mailto:oliverloo09@gmail.com">Email</a></li>
       <li><a href="https://www.linkedin.com/in/oliver-loo-8ab131157">LinkedIn</a></li>
       <li><a href="https://github.com/Oliverloo0909">GitHub</a></li>
       <li><a href="https://www.instagram.com/yutasakthefirst/">Instagram</a></li>
-      <li><a href="#hire">Résumé</a></li>
+      <li><a href="Oliver-Loo-CV.pdf" download>Résumé</a></li>
     </ul>
-
-    <p class="scroll-hint" aria-hidden="true">
-      <span class="arrow">↓</span> keep scrolling
-    </p>
+    <span class="hero-year">Graduating 2026 · open to work</span>
   </div>
 </header>
 
@@ -103,17 +98,14 @@
         </div>
         <p class="role">Solo. Product, design, mobile, backend.</p>
         <p>
-          Logging a workout is the thing people quit over. So I made it one line:
-          type <i>"bench 3×8 80kg, rows 4×10"</i> and it becomes structured sets.
-          Ask the coach for a program and you get a real multi-week plan back.
+          An AI training partner. Type a workout in plain English and it becomes
+          structured sets; ask the coach and you get a full multi-week plan.
         </p>
-        <p>
-          The hard question with any AI product is what happens when it's wrong.
-          My answer was a rule I don't break: <b>the model never touches your data
-          on its own.</b> Every action it proposes is a widget you edit and confirm.
-          That's the difference between a demo people try once and something
-          someone trusts with a year of training history.
-        </p>
+        <ul class="stats" role="list">
+          <li><b>Live</b><span>App Store</span></li>
+          <li><b>Local-first</b><span>works offline</span></li>
+          <li><b>Confirm-first</b><span>AI never writes alone</span></li>
+        </ul>
         <ul class="stack" role="list">
           <li>React Native</li><li>Expo</li><li>TypeScript</li>
           <li>WatermelonDB</li><li>Gemini</li><li>Local first</li>
@@ -141,22 +133,14 @@
         </div>
         <p class="role">Solo. Full stack and the whole data pipeline.</p>
         <p>
-          Deciding where to go out is a research project nobody wants. funhop takes
-          your vibe, area, budget and group size, and hands back a two or three stop
-          night built only from things genuinely happening that evening. No stale
-          listings, no dead links.
+          A night out in three taps. Give it your vibe, area and budget; get back
+          a two or three stop plan built only from what is genuinely on tonight.
         </p>
-        <p>
-          Keeping that promise is the whole engineering problem. Seven stages of
-          Python pull from Telegram and event sites, and an LLM turns unstructured
-          posts into events you can actually filter on. Then <b>85% of the table
-          went quietly wrong</b>: no errors, no alerts, just images and links that
-          had stopped resolving. Signed image URLs were losing their query strings,
-          and I'd been synthesising detail URLs from title slugs that had 404'd for
-          seven weeks. I now treat silent data rot as the default failure mode and
-          encode every fix as a rule the pipeline enforces, because a recommender
-          that quietly lies is worse than one that returns nothing.
-        </p>
+        <ul class="stats" role="list">
+          <li><b>7 stages</b><span>ingestion pipeline</span></li>
+          <li><b>LLM</b><span>messy posts to structured events</span></li>
+          <li><b>85%</b><span>silent corruption found and fixed</span></li>
+        </ul>
         <ul class="stack" role="list">
           <li>Next.js 16</li><li>TypeScript</li><li>Tailwind</li>
           <li>Python</li><li>LLM extraction</li><li>Supabase</li>
@@ -201,18 +185,14 @@
         </div>
         <p class="role">Solo studio. Engine, game, content, art direction.</p>
         <p>
-          Language apps lose people because practice feels like homework. So the
-          lesson is a game you already understand in three seconds: run a Paris
-          boulangerie or a Tokyo sushi bar, tap the right phrase before it slides
-          off the belt. There's no tutorial because it doesn't need one.
+          Language practice disguised as an arcade game. Run a Paris boulangerie
+          or a Tokyo sushi bar and tap the right phrase before it slides past.
         </p>
-        <p>
-          Underneath the arcade layer it's a spaced-repetition scheduler, and the
-          wrong answers are chosen to look plausible so you can't win by matching
-          shapes instead of learning. I built it as <b>one engine</b> serving both
-          titles, with language isolated to content files, so a third game is new
-          phrases and new art rather than a rewrite.
-        </p>
+        <ul class="stats" role="list">
+          <li><b>1 engine</b><span>two titles</span></li>
+          <li><b>Leitner</b><span>spaced repetition</span></li>
+          <li><b>No tutorial</b><span>it does not need one</span></li>
+        </ul>
         <ul class="stack" role="list">
           <li>Expo</li><li>Skia</li><li>Reanimated</li>
           <li>Zustand</li><li>Supabase</li><li>Spaced repetition</li>
@@ -225,11 +205,8 @@
     <article class="strip reveal">
       <h3>Bao Bae</h3>
       <p>
-        Therapy is expensive and most people wait years before starting. Bao Bae
-        runs Emotionally Focused Therapy sessions grounded in real clinical
-        material through FAISS vector search, so what it says back comes from the
-        literature rather than a model's imagination. On a subject this sensitive,
-        being grounded is the product, not a feature.
+        Emotionally Focused Therapy sessions grounded in real clinical material,
+        so the guidance comes from the literature rather than a model's guess.
       </p>
       <ul class="stack" role="list"><li>Python</li><li>RAG</li><li>FAISS</li><li>Vector search</li></ul>
     </article>

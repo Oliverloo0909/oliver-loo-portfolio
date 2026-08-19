@@ -64,57 +64,49 @@
   applyTheme();
   horizon();
 
-  /* ── 1b. hero flourishes ─────────────────────────────────────
-     Splits the headline into words so each can rise from behind its own
-     clipping edge, and drifts the globe a little against the pointer.
-     Both are decoration: if either is skipped the hero still reads. */
+  /* ── 1b. hero ────────────────────────────────────────────────
+     Hovering a nav item tints the background toward the section it
+     points at, so the menu previews where you are about to go rather
+     than just listing destinations. */
 
-  var heroH1 = document.querySelector('.sec-thesis .thesis-statement');
+  var heroEl = document.getElementById('thesis');
 
-  if (heroH1 && !reduced) {
-    var words = heroH1.textContent.trim().split(/\s+/);
-    heroH1.textContent = '';
-    words.forEach(function (w, i) {
-      var box = document.createElement('span');
-      box.className = 'hw';
-      var inner = document.createElement('i');
-      inner.textContent = w;
-      // The headline is the second thing in, so start after the eyebrow.
-      inner.style.animationDelay = (0.24 + i * 0.075).toFixed(3) + 's';
-      box.appendChild(inner);
-      heroH1.appendChild(box);
-      if (i < words.length - 1) heroH1.appendChild(document.createTextNode(' '));
-    });
-  }
+  if (heroEl && !reduced) {
+    var TINT = {
+      build: '#e6d8c4',   // warm, workshop
+      path:  '#cfd8e4',   // cool slate
+      break: '#c9e2d0',   // phosphor
+      hire:  '#f0d9bd'    // ember
+    };
+    var REST = '#ded8c8';
+    var silk = heroEl.querySelector('.silk');
 
-  var hero = document.getElementById('thesis');
+    function tint(c) {
+      if (silk) silk.style.setProperty('--silk', c);
+    }
 
-  if (hero && !reduced && window.matchMedia('(pointer:fine)').matches) {
-    var px = 0, py = 0, qx = 0, qy = 0, parRaf = null;
-
-    hero.addEventListener('pointermove', function (e) {
-      var r = hero.getBoundingClientRect();
-      // -1..1 from the centre, scaled to a few pixels of drift.
-      px = ((e.clientX - r.left) / r.width - 0.5) * 26;
-      py = ((e.clientY - r.top) / r.height - 0.5) * 18;
-      if (!parRaf) parRaf = window.requestAnimationFrame(drift2);
-    }, { passive: true });
-
-    hero.addEventListener('pointerleave', function () {
-      px = 0; py = 0;
-      if (!parRaf) parRaf = window.requestAnimationFrame(drift2);
+    [].slice.call(heroEl.querySelectorAll('[data-tint]')).forEach(function (a) {
+      a.addEventListener('pointerenter', function () { tint(TINT[a.getAttribute('data-tint')] || REST); });
+      a.addEventListener('pointerleave', function () { tint(REST); });
+      a.addEventListener('focus', function () { tint(TINT[a.getAttribute('data-tint')] || REST); });
+      a.addEventListener('blur', function () { tint(REST); });
     });
 
-    function drift2() {
-      qx += (px - qx) * 0.06;
-      qy += (py - qy) * 0.06;
-      root.style.setProperty('--par-x', qx.toFixed(2) + 'px');
-      root.style.setProperty('--par-y', qy.toFixed(2) + 'px');
-      if (Math.abs(px - qx) > 0.1 || Math.abs(py - qy) > 0.1) {
-        parRaf = window.requestAnimationFrame(drift2);
-      } else {
-        parRaf = null;
-      }
+    // The name pulls the light toward the pointer, so the surface reacts
+    // to being looked at without anything moving on the page.
+    if (window.matchMedia('(pointer:fine)').matches) {
+      var nm = heroEl.querySelector('.bigname');
+      heroEl.addEventListener('pointermove', function (e) {
+        var r = heroEl.getBoundingClientRect();
+        var x = ((e.clientX - r.left) / r.width - 0.5) * 2;
+        var y = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        if (silk) silk.style.transform = 'translate(' + (x * 2.4).toFixed(2) + '%,' + (y * 2.2).toFixed(2) + '%)';
+        if (nm) nm.style.transform = 'translate(' + (x * 0.5).toFixed(2) + '%,' + (y * 0.5).toFixed(2) + '%)';
+      }, { passive: true });
+      heroEl.addEventListener('pointerleave', function () {
+        if (silk) silk.style.transform = '';
+        if (nm) nm.style.transform = '';
+      });
     }
   }
 
