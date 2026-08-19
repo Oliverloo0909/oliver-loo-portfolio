@@ -64,50 +64,116 @@
   applyTheme();
   horizon();
 
-  /* ── 1b. hero ────────────────────────────────────────────────
-     Hovering a nav item tints the background toward the section it
-     points at, so the menu previews where you are about to go rather
-     than just listing destinations. */
+  /* ── 1b. hero nameplate ──────────────────────────────────────
+     Two things happen to the name. The cursor wipes a hole through the
+     white layer to a neon copy underneath, and every few seconds it
+     glitches and briefly becomes one of the three things the site is
+     about, then snaps back. */
 
+  var plate = document.getElementById('nameplate');
+
+  if (plate && !reduced) {
+    var base  = document.getElementById('npBase');
+    var neon  = document.getElementById('npNeon');
+    var NAME  = 'Oliver Loo';
+    var over  = false;      // pointer currently on the name
+    var WORDS = ['design', 'security', 'functionality'];
+    var wi = 0, busy = false;
+
+    // Cursor reveal. The mask radius opens when the pointer is over the
+    // name and closes when it leaves, so it reads as a torch rather than
+    // a permanent hole.
+    if (window.matchMedia('(pointer:fine)').matches) {
+      plate.addEventListener('pointermove', function (e) {
+        var r = plate.getBoundingClientRect();
+        over = true;
+        plate.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px');
+        plate.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
+        plate.style.setProperty('--rev', '190px');
+      }, { passive: true });
+
+      plate.addEventListener('pointerleave', function () {
+        over = false;
+        plate.style.setProperty('--rev', '0px');
+      });
+    }
+
+    function setText(t) {
+      base.textContent = t;
+      neon.textContent = t;
+    }
+
+    var NEON = ['#00f0ff', '#7cff4f', '#ff3ea5'];
+
+    function tic(toWord) {
+      if (busy) return;
+      busy = true;
+
+      // One colour for the whole glitch, cycling between them.
+      plate.style.setProperty('--neon', NEON[wi % NEON.length]);
+      plate.classList.add('glitch');
+
+      if (toWord) {
+        // The word is a flash inside the distortion, not a state the
+        // name sits in: roughly a sixth of a second and gone.
+        window.setTimeout(function () {
+          setText(WORDS[wi % WORDS.length]);
+          plate.classList.add('word');
+        }, 90);
+
+        window.setTimeout(function () {
+          setText(NAME);
+          plate.classList.remove('word');
+        }, 250);
+      }
+
+      window.setTimeout(function () {
+        plate.classList.remove('glitch');
+        if (!over) plate.style.setProperty('--rev', '0px');
+        if (toWord) wi++;
+        busy = false;
+      }, 360);
+    }
+
+    // Alternate a small tic with a full word swap so it never feels like
+    // a metronome, and only run while the hero is actually on screen.
+    var beat = 0, timer = null;
+
+    function loop() {
+      beat++;
+      tic(beat % 2 === 0);
+      timer = window.setTimeout(loop, beat % 2 === 0 ? 4200 : 2600);
+    }
+
+    if (hasIO) {
+      new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+          if (!timer) timer = window.setTimeout(loop, 1800);
+        } else if (timer) {
+          window.clearTimeout(timer); timer = null;
+        }
+      }, { threshold: 0.25 }).observe(plate);
+    } else {
+      timer = window.setTimeout(loop, 1800);
+    }
+  }
+
+  /* Nav hover tints the hero haze toward the section it points at. */
   var heroEl = document.getElementById('thesis');
 
   if (heroEl && !reduced) {
-    var TINT = {
-      build: '#e6d8c4',   // warm, workshop
-      path:  '#cfd8e4',   // cool slate
-      break: '#c9e2d0',   // phosphor
-      hire:  '#f0d9bd'    // ember
-    };
-    var REST = '#ded8c8';
+    var TINT = { build: '#3a2a12', path: '#12233a', break: '#0a3520', hire: '#3a2410' };
+    var REST = '#101a2e';
     var silk = heroEl.querySelector('.silk');
 
-    function tint(c) {
-      if (silk) silk.style.setProperty('--silk', c);
-    }
-
     [].slice.call(heroEl.querySelectorAll('[data-tint]')).forEach(function (a) {
-      a.addEventListener('pointerenter', function () { tint(TINT[a.getAttribute('data-tint')] || REST); });
-      a.addEventListener('pointerleave', function () { tint(REST); });
-      a.addEventListener('focus', function () { tint(TINT[a.getAttribute('data-tint')] || REST); });
-      a.addEventListener('blur', function () { tint(REST); });
+      function on()  { if (silk) silk.style.setProperty('--silk', TINT[a.getAttribute('data-tint')] || REST); }
+      function off() { if (silk) silk.style.setProperty('--silk', REST); }
+      a.addEventListener('pointerenter', on);
+      a.addEventListener('pointerleave', off);
+      a.addEventListener('focus', on);
+      a.addEventListener('blur', off);
     });
-
-    // The name pulls the light toward the pointer, so the surface reacts
-    // to being looked at without anything moving on the page.
-    if (window.matchMedia('(pointer:fine)').matches) {
-      var nm = heroEl.querySelector('.bigname');
-      heroEl.addEventListener('pointermove', function (e) {
-        var r = heroEl.getBoundingClientRect();
-        var x = ((e.clientX - r.left) / r.width - 0.5) * 2;
-        var y = ((e.clientY - r.top) / r.height - 0.5) * 2;
-        if (silk) silk.style.transform = 'translate(' + (x * 2.4).toFixed(2) + '%,' + (y * 2.2).toFixed(2) + '%)';
-        if (nm) nm.style.transform = 'translate(' + (x * 0.5).toFixed(2) + '%,' + (y * 0.5).toFixed(2) + '%)';
-      }, { passive: true });
-      heroEl.addEventListener('pointerleave', function () {
-        if (silk) silk.style.transform = '';
-        if (nm) nm.style.transform = '';
-      });
-    }
   }
 
   /* ── 2. reveal on scroll ─────────────────────────────────── */
