@@ -53,9 +53,7 @@
       </p>
       <p>
         I work across <a href="#break" class="w w-break">security</a>,
-        <a href="#build" class="w w-build">AI</a>, mobile and
-        design. The interesting problems
-        never sit neatly inside one of them.
+        <a href="#build" class="w w-build">AI</a>, mobile and design.
       </p>
       <p class="punch">Graduating August 2026. Looking for what's next.</p>
     </div>
@@ -105,12 +103,16 @@
         </div>
         <p class="role">Solo. Product, design, mobile, backend.</p>
         <p>
-          An AI personal trainer. Type <i>"bench 3×8 80kg, rows 4×10"</i> and it
-          becomes structured sets. Or just talk to the coach and get a full program.
+          Logging a workout is the thing people quit over. So I made it one line:
+          type <i>"bench 3×8 80kg, rows 4×10"</i> and it becomes structured sets.
+          Ask the coach for a program and you get a real multi-week plan back.
         </p>
         <p>
-          The bit I'm proud of: <b>the model never touches your data on its own.</b>
-          Every action shows up as a widget you confirm first.
+          The hard question with any AI product is what happens when it's wrong.
+          My answer was a rule I don't break: <b>the model never touches your data
+          on its own.</b> Every action it proposes is a widget you edit and confirm.
+          That's the difference between a demo people try once and something
+          someone trusts with a year of training history.
         </p>
         <ul class="stack" role="list">
           <li>React Native</li><li>Expo</li><li>TypeScript</li>
@@ -139,16 +141,21 @@
         </div>
         <p class="role">Solo. Full stack and the whole data pipeline.</p>
         <p>
-          Tell it your vibe. Area, budget, group size, mood. Get back a two or three
-          stop night out, built from things actually happening tonight.
+          Deciding where to go out is a research project nobody wants. funhop takes
+          your vibe, area, budget and group size, and hands back a two or three stop
+          night built only from things genuinely happening that evening. No stale
+          listings, no dead links.
         </p>
         <p>
-          Getting the data is the hard part. Seven stages of Python scrape Telegram
-          and event sites, an LLM turns messy posts into structured events. Two
-          adapters once corrupted <b>85% of the table</b> in total silence. Took me
-          a while to find it. Signed image URLs losing their query strings, and a
-          detail URL I'd been faking from a title slug that had 404'd for seven
-          weeks.
+          Keeping that promise is the whole engineering problem. Seven stages of
+          Python pull from Telegram and event sites, and an LLM turns unstructured
+          posts into events you can actually filter on. Then <b>85% of the table
+          went quietly wrong</b>: no errors, no alerts, just images and links that
+          had stopped resolving. Signed image URLs were losing their query strings,
+          and I'd been synthesising detail URLs from title slugs that had 404'd for
+          seven weeks. I now treat silent data rot as the default failure mode and
+          encode every fix as a rule the pipeline enforces, because a recommender
+          that quietly lies is worse than one that returns nothing.
         </p>
         <ul class="stack" role="list">
           <li>Next.js 16</li><li>TypeScript</li><li>Tailwind</li>
@@ -194,14 +201,17 @@
         </div>
         <p class="role">Solo studio. Engine, game, content, art direction.</p>
         <p>
-          Run a Paris boulangerie or a Tokyo sushi bar. A customer asks in English,
-          you tap the right phrase before it slides off the belt. No tutorial,
-          doesn't need one.
+          Language apps lose people because practice feels like homework. So the
+          lesson is a game you already understand in three seconds: run a Paris
+          boulangerie or a Tokyo sushi bar, tap the right phrase before it slides
+          off the belt. There's no tutorial because it doesn't need one.
         </p>
         <p>
-          Both run on <b>one engine</b>. Game three is just new phrases, new sprites,
-          new voice. Under the arcade layer it's spaced repetition, and the wrong
-          answers are picked to look plausible so you can't win by matching shapes.
+          Underneath the arcade layer it's a spaced-repetition scheduler, and the
+          wrong answers are chosen to look plausible so you can't win by matching
+          shapes instead of learning. I built it as <b>one engine</b> serving both
+          titles, with language isolated to content files, so a third game is new
+          phrases and new art rather than a rewrite.
         </p>
         <ul class="stack" role="list">
           <li>Expo</li><li>Skia</li><li>Reanimated</li>
@@ -215,8 +225,11 @@
     <article class="strip reveal">
       <h3>Bao Bae</h3>
       <p>
-        AI couples therapy running Emotionally Focused Therapy sessions. FAISS
-        vector search over real clinical material, so it isn't making the advice up.
+        Therapy is expensive and most people wait years before starting. Bao Bae
+        runs Emotionally Focused Therapy sessions grounded in real clinical
+        material through FAISS vector search, so what it says back comes from the
+        literature rather than a model's imagination. On a subject this sensitive,
+        being grounded is the product, not a feature.
       </p>
       <ul class="stack" role="list"><li>Python</li><li>RAG</li><li>FAISS</li><li>Vector search</li></ul>
     </article>
@@ -302,8 +315,9 @@
     <p class="eyebrow reveal">03 / Break</p>
     <h2 class="reveal">Security</h2>
     <p class="section-lede reveal">
-      One of the fields I went deep in. I'd rather be the one who finds the hole
-      than the one who reads about it in the incident report.
+      Building and breaking are the same skill pointed in opposite directions.
+      Everything I ship is shaped by having spent the week before trying to take
+      something apart.
     </p>
 
     <div class="term reveal" aria-hidden="true">
@@ -312,7 +326,9 @@
 <span class="o">security engineer who also ships product</span>
 <span class="p">$</span> cat approach.txt
 <span class="o">enumerate everything. assume nothing.
-the bug is almost never where the docs say it is.</span>
+the bug is almost never where the docs say it is.
+build like someone is going to break it, because
+that someone is usually me.</span>
 <span class="p">$</span> ls ~/labs
 <span class="o">proving-grounds/  hacksmarter/  hack-the-box/
 malware-analysis/  pcap-nids-agent/</span>
@@ -321,40 +337,44 @@ malware-analysis/  pcap-nids-agent/</span>
 
     <div class="grid">
       <div class="col reveal">
-        <h3>I run the labs</h3>
+        <h3>Labs</h3>
         <p>
           <b>Proving Grounds</b>, <b>HackSmarter</b>, <b>Hack The Box</b>.
-          Enumeration, exploitation, privesc, Linux and Windows. Favourite part
-          of the week.
+          Enumeration, exploitation, privilege escalation, Linux and Windows.
+          The part that keeps me coming back is the enumeration: almost every box
+          turns on something small that was sitting in plain sight.
         </p>
         <p class="note">
-          No OSCP. The lab work is real, the cert isn't mine to claim.
+          No OSCP. The lab work is real, the certificate isn't mine to claim.
         </p>
       </div>
 
       <div class="col reveal">
-        <h3>I take malware apart</h3>
+        <h3>Experience</h3>
         <p>
-          Worked the <i>Practical Malware Analysis</i> labs end to end. Static
-          triage, dynamic behaviour in a sandbox, disassembler when the binary
-          got shy.
+          Six months at <b>HTX</b> on AI and cybersecurity, then a technology
+          attachment at <b>DART</b> teaching cyber to youth. Teaching turned out
+          to be the sharpest test of whether I actually understood something.
+          Full detail in <a href="#path">Path</a>.
         </p>
       </div>
 
       <div class="col reveal">
-        <h3>I built a detector</h3>
+        <h3>Projects</h3>
         <p>
-          A PCAP agent with its own MCP server. It feeds suspicious flows to an
-          LLM analyst loop instead of a ruleset, so it catches traffic a signature
-          walks straight past.
+          A PCAP analysis agent with its own MCP server, feeding suspicious flows
+          into an LLM analyst loop instead of a fixed ruleset. I wanted to know
+          whether a model could reason about traffic a signature walks straight
+          past. It can, often enough to be interesting.
         </p>
       </div>
 
       <div class="col reveal">
-        <h3>I've done it for real</h3>
+        <h3>Reading</h3>
         <p>
-          Six months at <b>HTX</b> on AI and cybersecurity. Then an attachment at
-          <b>DART</b>. Both in <a href="#path">Path</a>.
+          <i>Practical Malware Analysis</i>, worked cover to cover with the full
+          lab set: static triage, dynamic behaviour in an isolated VM, and into
+          the disassembler when a binary refused to explain itself.
         </p>
       </div>
     </div>
