@@ -1,0 +1,61 @@
+OLIVER LOO CHONG ZHENG
+AI engineer and generalist. I put LLMs into products people actually use, and I ship them end to end.
+
+oliverloo09@gmail.com | +65 8298 1369 | Singapore, open to remote | linkedin.com/in/oliver-loo-8ab131157 | oliver-loo-portfolio.vercel.app
+
+EDUCATION
+----------------------------------------
+
+National University of Singapore — Bachelor of Computing (Honours), Computer Science  (2021 – 2026)
+Second Class Upper Honours (Distinction), CAP 4.02 / 5.00. Security specialisation. Degree conferred 31 August 2026.
+
+Stanford University — Undergraduate Summer Visitor, 8 credits transferred  (Summer 2025)
+GPA 4.00 / 4.00. Computer Graphics and Imaging (A+), Technology Entrepreneurship (A−).
+
+EXPERIENCE
+----------------------------------------
+
+DART Consulting and Training — Cyber Youth Instructor & Software Engineer Intern  (Jan – Jun 2026)
+Singapore
+- Worked inside a cybersecurity training and consulting environment, deepening practical security knowledge beyond coursework into how security is operated and adopted across an organisation.
+- Developed and delivered technical material and supported training communications, translating security concepts into content non-specialists could learn from and act on.
+
+HTX, Home Team Science and Technology Agency — AI and Cybersecurity Intern  (Jan – Jun 2025)
+Singapore
+- Built OSINT collection pipelines with vision-language extraction and automated decision-making across open web and social sources.
+- Deployed and managed lightweight LLMs in virtualised Linux environments, integrating them into collection and interaction pipelines.
+- Designed automated workflow orchestration on the OpenAI API to streamline structured content generation.
+
+Singapore Armed Forces, 10C4I — Platoon Sergeant (Second Sergeant)  (Aug 2019 – Jul 2020)
+- Led a team maintaining and troubleshooting a critical army network, configuring and managing network devices, and delivering the training programme that integrated new operators.
+
+PROJECTS
+----------------------------------------
+
+Levanta — AI personal training app, live on the App Store  (2025 – 2026)
+- Solo-designed and shipped an iOS app in React Native and Expo with local-first storage in WatermelonDB and a Google Gemini coaching layer.
+- Natural-language workout logging parses free text into structured sets; every AI-proposed action renders as a confirmable widget so the model never mutates user data silently.
+
+funhop.app — Singapore night-planner, live  (2026)
+- Built the full stack in Next.js and TypeScript on Supabase, plus a seven-stage Python ingestion pipeline that scrapes Telegram and publisher sites and uses an LLM to extract structured events.
+- Diagnosed and fixed silent data corruption affecting roughly 85% of the events table, traced to stripped query strings on signed image URLs and synthesised detail URLs returning 404.
+
+Langfun — Oui Chef! and Sushi Senpai — language-learning arcade games  (2026)
+- Built one reusable game engine in Expo, Skia and Reanimated serving two titles, with all language content isolated to JSON and a theme file so a new title needs no engine changes.
+- Implemented a Leitner spaced-repetition scheduler and plausibility-constrained distractor selection so players learn the phrases rather than pattern-match the options.
+
+Bao Bae — retrieval-augmented couples therapy platform  (2025)
+- Built a RAG system using FAISS vector search over a therapeutic knowledge base, combining clinical material with real-time conversation analysis to deliver grounded Emotionally Focused Therapy sessions.
+
+SECURITY PRACTICE & CERTIFICATIONS
+----------------------------------------
+- Hands-on labs: Offensive Security Proving Grounds, HackSmarter and Hack The Box. Enumeration, exploitation and privilege escalation across Linux and Windows targets.
+- Malware analysis and detection: completed the Practical Malware Analysis lab set (static triage, dynamic analysis in isolated VMs, disassembly), and built a PCAP analysis agent with an MCP server that surfaces suspicious flows into an LLM analyst loop.
+- Certifications: Google Cybersecurity Professional Certificate, AWS Cloud Essentials.
+
+SKILLS
+----------------------------------------
+AI: LLM integration, RAG, FAISS, vector search, agents and tool use, MCP, prompt design, vision-language models, Gemini and OpenAI APIs, NLP
+Languages: Python, TypeScript, JavaScript, Java, C, Rust, SQL, Bash
+Building: React, React Native, Expo, Next.js, Node.js, Supabase, PostgreSQL, MongoDB, Git, Unix, Docker
+Security: Penetration testing, malware analysis, network security, vulnerability assessment, Linux hardening
